@@ -7,56 +7,59 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
-    <nav class="bg-blue-800 p-4 text-white shadow-lg">
-        <div class="container mx-auto flex justify-between">
-            <h1 class="text-xl font-bold">Sistema de Cuentas por Pagar</h1>
-            <span>Bienvenida, Katerine</span>
+    <nav class="bg-blue-900 p-4 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Bold Group - Dashboard</h1>
+            <div class="space-x-4">
+                <button onclick="showTab('dashboard')" class="hover:text-blue-300">Resumen Cuentas</button>
+                <button onclick="showTab('financial')" class="hover:text-blue-300 font-bold underline">Financial Position</button>
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto mt-10 p-6">
+    <div id="dashboard" class="tab-content hidden container mx-auto mt-10 p-6">
+        <h2 class="text-2xl font-bold mb-6">Resumen de Tesorería</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Tarjetas de Resumen -->
-            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
-                <h3 class="text-gray-500 text-sm font-medium">Pendientes de Pago</h3>
-                <p class="text-3xl font-bold text-gray-800">$12,450.00</p>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                <h3 class="text-gray-500">Total Pendiente</h3>
+                <p class="text-3xl font-bold">$12,450</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
-                <h3 class="text-gray-500 text-sm font-medium">Vencen Hoy</h3>
-                <p class="text-3xl font-bold text-gray-800">5 facturas</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
-                <h3 class="text-gray-500 text-sm font-medium">Pagado este mes</h3>
-                <p class="text-3xl font-bold text-gray-800">$45,200.00</p>
-            </div>
+        </div>
+    </div>
+
+    <div id="financial" class="tab-content container mx-auto mt-10 p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Financial Position - Análisis Consolidado</h2>
+            <div class="text-sm text-gray-500 italic">Datos actualizados vía Colab</div>
         </div>
 
-        <div class="mt-10 bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="bg-gray-50 p-4 border-b">
-                <h2 class="font-bold text-gray-700">Listado de Proveedores</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-600">
+                <h3 class="font-bold text-lg text-purple-900">Bold CF</h3>
+                <div id="data-bold-cf" class="mt-4 text-2xl font-mono">Cargando...</div>
             </div>
-            <table class="w-full text-left">
-                <thead class="bg-gray-100 text-gray-600 text-sm uppercase">
-                    <tr>
-                        <th class="p-4">Proveedor</th>
-                        <th class="p-4">Vencimiento</th>
-                        <th class="p-4">Estado</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
-                    <tr>
-                        <td class="p-4 font-medium">Suministros Globales S.A.</td>
-                        <td class="p-4">15 Mayo, 2026</td>
-                        <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pendiente</span></td>
-                    </tr>
-                    <tr>
-                        <td class="p-4 font-medium">Servicios Eléctricos XYZ</td>
-                        <td class="p-4">10 Mayo, 2026</td>
-                        <td class="p-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Pagado</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-600">
+                <h3 class="font-bold text-lg text-blue-900">Bold SAS</h3>
+                <div id="data-bold-sas" class="mt-4 text-2xl font-mono">Cargando...</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600">
+                <h3 class="font-bold text-lg text-red-900">Bold Perú</h3>
+                <div id="data-bold-peru" class="mt-4 text-2xl font-mono">Cargando...</div>
+            </div>
         </div>
-    </main>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <p class="text-gray-600">Aquí puedes incrustar gráficos de tu análisis de Colab.</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+        }
+        // Mostrar Financial por defecto ahora que la estamos creando
+        showTab('financial');
+    </script>
 </body>
 </html>

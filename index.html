@@ -3,114 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BackOffice - Tesorería</title>
+    <title>BI Bold - Detalle Bancario</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans">
-    <nav class="bg-blue-900 p-4 text-white shadow-lg sticky top-0 z-50">
+<body class="bg-slate-50 font-sans">
+    <nav class="bg-[#001529] p-4 text-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Bold Group - Dashboard</h1>
-            <div class="space-x-4">
-                <button onclick="showTab('dashboard')" class="hover:text-blue-300">Resumen Cuentas</button>
-                <button onclick="showTab('financial')" class="hover:text-blue-300 font-bold underline">Financial Position</button>
-            </div>
+            <h1 class="text-lg font-bold tracking-tight">BOLD GROUP <span class="font-light text-blue-400">| TESORERÍA</span></h1>
+            <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 8:00 AM</div>
         </div>
     </nav>
 
-    <!-- Tab Resumen (Dashboard) -->
-    <div id="dashboard" class="tab-content hidden container mx-auto mt-10 p-6">
-        <h2 class="text-2xl font-bold mb-6">Resumen de Tesorería</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
-                <h3 class="text-gray-500">Total Pendiente</h3>
-                <p class="text-3xl font-bold">$12,450</p>
-            </div>
-        </div>
-    </div>
+    <div class="container mx-auto mt-8 p-4">
+        <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Posición Financiera Detallada</h2>
+        <p class="text-slate-500 mb-8">Saldos por entidad y desglose de cuentas bancarias</p>
 
-    <!-- Tab Financial Position -->
-    <div id="financial" class="tab-content container mx-auto mt-10 p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Financial Position - Análisis Consolidado</h2>
-            <div class="text-sm text-gray-500 italic">Actualizado automáticamente por BI Bot</div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <!-- Bold CF -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-600">
-                <h3 class="font-bold text-lg text-purple-900">Bold CF</h3>
-                <div id="data-bold-cf" class="mt-4 text-2xl font-mono font-bold">Cargando...</div>
-                <div id="var-bold-cf" class="text-sm mt-2">--</div>
-            </div>
-            
-            <!-- Bold SAS -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-600">
-                <h3 class="font-bold text-lg text-blue-900">Bold SAS</h3>
-                <div id="data-bold-sas" class="mt-4 text-2xl font-mono font-bold">Cargando...</div>
-                <div id="var-bold-sas" class="text-sm mt-2">--</div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sección Bold CF -->
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-600">
+                    <h3 class="text-purple-900 font-bold">BOLD CF</h3>
+                    <div id="total-Bold_CF" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
+                </div>
+                <div id="list-Bold_CF" class="space-y-2"></div>
             </div>
 
-            <!-- Bold Perú -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600">
-                <h3 class="font-bold text-lg text-red-900">Bold Perú</h3>
-                <div id="data-bold-peru" class="mt-4 text-2xl font-mono font-bold">Cargando...</div>
-                <div id="var-bold-peru" class="text-sm mt-2">--</div>
+            <!-- Sección Bold SAS -->
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-600">
+                    <h3 class="text-blue-900 font-bold">BOLD SAS</h3>
+                    <div id="total-Bold_SAS" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
+                </div>
+                <div id="list-Bold_SAS" class="space-y-2"></div>
             </div>
-        </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow">
-            <p class="text-gray-600">Los datos se sincronizan diariamente a las 8:00 AM desde el archivo maestro "Financial Position".</p>
+
+            <!-- Sección Bold Perú -->
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-red-600">
+                    <h3 class="text-red-900 font-bold">BOLD PERÚ</h3>
+                    <div id="total-Bold_Peru" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
+                </div>
+                <div id="list-Bold_Peru" class="space-y-2"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Función para cambiar pestañas
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.getElementById(tabId).classList.remove('hidden');
-        }
+        const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
 
-        // Función para formatear moneda
-        const fmtCurr = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
-
-        // --- EL CEREBRO: Carga de datos desde JSON ---
-        async function cargarDatos() {
+        async function cargarBI() {
             try {
-                // Agregamos un timestamp para evitar que el navegador use datos viejos (cache)
-                const response = await fetch('financial_data.json?t=' + new Date().getTime());
-                const data = await response.json();
+                const res = await fetch('financial_data.json?v=' + Date.now());
+                const data = await res.json();
 
-                const mapeo = [
-                    { key: 'Bold_CF', id: 'data-bold-cf', varId: 'var-bold-cf' },
-                    { key: 'Bold_SAS', id: 'data-bold-sas', varId: 'var-bold-sas' },
-                    { key: 'Bold_Peru', id: 'data-bold-peru', varId: 'var-bold-peru' }
-                ];
+                Object.keys(data).forEach(empresa => {
+                    const info = data[empresa];
+                    // Actualizar Total Principal
+                    document.getElementById(`total-${empresa}`).innerText = fmt(info.saldo_actual);
 
-                mapeo.forEach(item => {
-                    if (data[item.key]) {
-                        const info = data[item.key];
-                        // Actualizar Saldo
-                        document.getElementById(item.id).innerText = fmtCurr(info.saldo_actual);
-                        
-                        // Actualizar Variación con color
-                        const varElem = document.getElementById(item.varId);
-                        const variacion = info.d_1_variacion.toFixed(2);
-                        const color = info.d_1_variacion >= 0 ? 'text-green-600' : 'text-red-600';
-                        const flecha = info.d_1_variacion >= 0 ? '▲' : '▼';
-                        
-                        varElem.innerHTML = `<span class="${color} font-bold">${flecha} ${Math.abs(variacion)}%</span> vs ayer`;
-                    }
+                    // Generar lista de bancos
+                    const listContainer = document.getElementById(`list-${empresa}`);
+                    listContainer.innerHTML = info.bancos.map(b => `
+                        <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center hover:shadow-md transition-shadow">
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">${b.nombre}</p>
+                                <p class="text-md font-bold text-slate-700">${fmt(b.saldo)}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-black ${b.variacion >= 0 ? 'text-green-500' : 'text-red-500'}">
+                                    ${b.variacion >= 0 ? '▲' : '▼'} ${Math.abs(b.variacion).toFixed(1)}%
+                                </span>
+                            </div>
+                        </div>
+                    `).join('');
                 });
-
-            } catch (error) {
-                console.error("Error cargando el JSON:", error);
-                document.querySelectorAll('[id^="data-bold"]').forEach(el => el.innerText = "Error de carga");
-            }
+            } catch (e) { console.error("Error:", e); }
         }
 
-        // Ejecutar al cargar la página
-        showTab('financial');
-        cargarDatos();
+        cargarBI();
     </script>
 </body>
 </html>

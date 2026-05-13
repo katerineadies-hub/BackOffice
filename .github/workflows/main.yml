@@ -2,9 +2,9 @@ name: Actualización Automática BI Bold
 
 on:
   schedule:
-    # 21:32 Colombia = 02:32 UTC
-    - cron: '32 2 * * *'
-  workflow_dispatch: # Mantenemos esto para que también puedas darle "Play" manualmente
+    # 9:00 AM Colombia = 14:00 UTC
+    - cron: '0 14 * * *'
+  workflow_dispatch: # Permite ejecución manual desde la pestaña Actions
 
 jobs:
   build:
@@ -32,6 +32,7 @@ jobs:
         run: |
           git config --global user.name "Bold BI Bot"
           git config --global user.email "bot@bold.co"
-          git add financial_data.json
-          git commit -m "📊 Prueba de automatización: 9:32 PM" || exit 0
+          # Agregamos tanto el archivo actual como la carpeta de historial
+          git add financial_data.json history/
+          git commit -m "📊 Actualización programada 9:00 AM: Posición Financiera" || exit 0
           git push

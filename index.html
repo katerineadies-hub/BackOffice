@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Position BackOffice</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Librerías de Exportación -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
@@ -12,7 +13,12 @@
 <body class="bg-slate-50 font-sans">
     <nav class="bg-[#001529] p-4 text-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-lg font-bold tracking-tight">BOLD GROUP <span class="font-light text-blue-400">| TESORERÍA</span></h1>
+            <!-- SECCIÓN DEL LOGO Y TÍTULO DE MARCA -->
+            <div class="flex items-center gap-3">
+                <img src="image_64f1f9.png" alt="Bold Logo" class="h-10 w-10 object-contain rounded-lg">
+                <h1 class="text-lg font-bold tracking-tight uppercase">Bold Group <span class="font-light text-blue-400">| Tesorería</span></h1>
+            </div>
+            
             <div class="flex items-center gap-4">
                 <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border-none outline-none">
                 <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 8:00 AM</div>
@@ -37,7 +43,8 @@
         </div>
 
         <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            </div>
+            <!-- Los datos se inyectan aquí manteniendo el diseño de bancos y variaciones -->
+        </div>
     </div>
 
     <script>
@@ -134,7 +141,7 @@
                 head: [['Empresa', 'Entidad/Banco', 'Saldo (USD)', 'Var %']],
                 body: tableData,
                 startY: 28,
-                headStyles: { fillColor: [0, 21, 41] } // Azul oscuro para combinar con el nav
+                headStyles: { fillColor: [0, 21, 41] } 
             });
             doc.save("Financial_Position_Report.pdf");
         }

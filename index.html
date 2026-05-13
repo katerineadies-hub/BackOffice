@@ -13,7 +13,7 @@
 <body class="bg-slate-50 font-sans">
     <nav class="bg-[#001529] p-4 text-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <!-- SECCIÓN DEL LOGO OFICIAL Y TÍTULO -->
+            <!-- LOGO OFICIAL BOLD -->
             <div class="flex items-center gap-3">
                 <img src="image_649b21.png" alt="Bold Logo" class="h-10 w-10 object-contain">
                 <h1 class="text-lg font-bold tracking-tight uppercase">Bold Group <span class="font-light text-blue-400">| Tesorería</span></h1>
@@ -43,7 +43,7 @@
         </div>
 
         <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Los datos se inyectan aquí con variaciones y flechas -->
+            <!-- Inyección de datos con variaciones y flechas -->
         </div>
     </div>
 
@@ -133,14 +133,12 @@
             const doc = new jsPDF();
             doc.setFontSize(16);
             doc.text("Financial Position BackOffice", 14, 15);
-            doc.setFontSize(10);
-            doc.text(`Generado el: ${new Date().toLocaleString()}`, 14, 22);
             
             const tableData = prepararTabla().map(obj => Object.values(obj));
             doc.autoTable({
                 head: [['Empresa', 'Entidad/Banco', 'Saldo (USD)', 'Var %']],
                 body: tableData,
-                startY: 28,
+                startY: 25,
                 headStyles: { fillColor: [0, 21, 41] } 
             });
             doc.save("Financial_Position_Report.pdf");

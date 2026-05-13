@@ -3,51 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Position BackOffice</title>
+    <title>BackOffice Bold - Centro de Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Librerías de Exportación -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body class="bg-slate-50 font-sans">
-    <nav class="bg-[#001529] p-4 text-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <!-- Asegúrate de subir el archivo 'logo.png' a tu repositorio principal -->
-                <img src="logo.png" alt="Bold" class="h-10 w-10 object-contain">
-                <h1 class="text-lg font-bold tracking-tight uppercase">Bold Group <span class="font-light text-blue-400">| Tesorería</span></h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border-none outline-none">
-                <!-- Hora actualizada a las 9:00 AM -->
-                <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 9:00 AM</div>
+    
+    <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
+    <nav class="bg-[#001529] text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- LOGO Y TÍTULO -->
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="Bold" class="h-10 w-10 object-contain">
+                    <h1 class="text-sm md:text-lg font-bold tracking-tight uppercase">Bold Group <span class="font-light text-blue-400">| BackOffice</span></h1>
+                </div>
+
+                <!-- MENÚ DE MÓDULOS (BOTONES) -->
+                <div class="hidden md:flex items-center gap-2">
+                    <button onclick="showModule('financial')" id="btn-financial" class="px-4 py-2 rounded-lg text-sm font-bold transition-all bg-blue-600 text-white shadow-lg">
+                        Financial Position
+                    </button>
+                    <!-- Espacio para nuevos botones -->
+                    <button onclick="showModule('otros')" id="btn-otros" class="px-4 py-2 rounded-lg text-sm font-bold transition-all text-slate-300 hover:bg-slate-800">
+                        Otros Módulos
+                    </button>
+                </div>
+
+                <!-- INDICADOR DE ACTUALIZACIÓN -->
+                <div class="text-[10px] bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">
+                    Auto-Update: 9:00 AM
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto mt-8 p-4">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
-            <div>
-                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Financial Position BackOffice</h2>
-                <p class="text-slate-500 italic text-sm">Gestión de activos y variaciones diarias por entidad</p>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="container mx-auto mt-8 p-4">
+
+        <!-- MÓDULO 1: FINANCIAL POSITION (TU DASHBOARD ACTUAL) -->
+        <section id="module-financial" class="module-content">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Financial Position BackOffice</h2>
+                    <div class="flex items-center gap-4">
+                        <p class="text-slate-500 italic text-sm">Gestión de activos y variaciones diarias</p>
+                        <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border border-slate-300 outline-none">
+                    </div>
+                </div>
+                <!-- BOTONES DE EXPORTACIÓN -->
+                <div class="flex gap-2">
+                    <button onclick="exportarExcel()" class="bg-[#1D6F42] hover:bg-[#155231] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all">Excel</button>
+                    <button onclick="exportarPDF()" class="bg-[#A11C1C] hover:bg-[#7D1616] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all">PDF</button>
+                </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="exportarExcel()" class="bg-[#1D6F42] hover:bg-[#155231] text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-all">Excel</button>
-                <button onclick="exportarPDF()" class="bg-[#A11C1C] hover:bg-[#7D1616] text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-all">PDF</button>
+
+            <!-- GRID DE DATOS -->
+            <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Los datos se inyectan aquí -->
             </div>
-        </div>
-        <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8"></div>
-    </div>
+        </section>
+
+        <!-- MÓDULO 2: ESPACIO PARA FUTUROS DESARROLLOS -->
+        <section id="module-otros" class="module-content hidden">
+            <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-200 text-center">
+                <h2 class="text-xl font-bold text-slate-400">Próximamente</h2>
+                <p class="text-slate-400 mt-2">Este espacio está reservado para nuevos módulos de Tesorería o BI.</p>
+            </div>
+        </section>
+
+    </main>
 
     <script>
         let datosGlobales = null;
         const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
 
+        // FUNCIÓN PARA CAMBIAR ENTRE MÓDULOS (BOTONES)
+        function showModule(moduleId) {
+            // Ocultar todos los módulos
+            document.querySelectorAll('.module-content').forEach(m => m.classList.add('hidden'));
+            // Quitar estilos activos de botones
+            document.querySelectorAll('nav button').forEach(b => {
+                b.classList.remove('bg-blue-600', 'text-white', 'shadow-lg');
+                b.classList.add('text-slate-300');
+            });
+
+            // Mostrar módulo seleccionado
+            document.getElementById(`module-${moduleId}`).classList.remove('hidden');
+            // Estilo activo al botón
+            const activeBtn = document.getElementById(`btn-${moduleId}`);
+            activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-lg');
+            activeBtn.classList.remove('text-slate-300');
+        }
+
+        // LÓGICA DE CARGA DE DATOS (Módulo Financial)
         async function cargarBI(fecha = null) {
             try {
                 const url = fecha ? `history/data_${fecha}.json` : 'financial_data.json';
                 const res = await fetch(url + '?v=' + Date.now());
-                if(!res.ok) throw new Error("No hay datos disponibles para la fecha seleccionada.");
+                if(!res.ok) throw new Error("No hay datos disponibles.");
                 datosGlobales = await res.json();
                 renderizarDashboard();
             } catch (e) { alert(e.message); }
@@ -71,7 +128,7 @@
                                 return `
                                     <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center">
                                         <div class="flex flex-col">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase">${b.nombre}</span>
+                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">${b.nombre}</span>
                                             <span class="text-sm font-bold text-slate-700">${fmt(b.saldo)}</span>
                                         </div>
                                         <div class="text-right">
@@ -86,6 +143,7 @@
             });
         }
 
+        // LÓGICA DE EXPORTACIÓN
         function prepararTabla() {
             const filas = [];
             Object.keys(datosGlobales).forEach(empresa => {

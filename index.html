@@ -17,6 +17,7 @@
         </div>
     </nav>
 
+    <!-- Tab Resumen (Dashboard) -->
     <div id="dashboard" class="tab-content hidden container mx-auto mt-10 p-6">
         <h2 class="text-2xl font-bold mb-6">Resumen de Tesorería</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -27,39 +28,89 @@
         </div>
     </div>
 
+    <!-- Tab Financial Position -->
     <div id="financial" class="tab-content container mx-auto mt-10 p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Financial Position - Análisis Consolidado</h2>
-            <div class="text-sm text-gray-500 italic">Datos actualizados vía Colab</div>
+            <div class="text-sm text-gray-500 italic">Actualizado automáticamente por BI Bot</div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <!-- Bold CF -->
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-600">
                 <h3 class="font-bold text-lg text-purple-900">Bold CF</h3>
-                <div id="data-bold-cf" class="mt-4 text-2xl font-mono">Cargando...</div>
+                <div id="data-bold-cf" class="mt-4 text-2xl font-mono font-bold">Cargando...</div>
+                <div id="var-bold-cf" class="text-sm mt-2">--</div>
             </div>
+            
+            <!-- Bold SAS -->
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-600">
                 <h3 class="font-bold text-lg text-blue-900">Bold SAS</h3>
-                <div id="data-bold-sas" class="mt-4 text-2xl font-mono">Cargando...</div>
+                <div id="data-bold-sas" class="mt-4 text-2xl font-mono font-bold">Cargando...</div>
+                <div id="var-bold-sas" class="text-sm mt-2">--</div>
             </div>
+
+            <!-- Bold Perú -->
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600">
                 <h3 class="font-bold text-lg text-red-900">Bold Perú</h3>
-                <div id="data-bold-peru" class="mt-4 text-2xl font-mono">Cargando...</div>
+                <div id="data-bold-peru" class="mt-4 text-2xl font-mono font-bold">Cargando...</div>
+                <div id="var-bold-peru" class="text-sm mt-2">--</div>
             </div>
         </div>
         
         <div class="bg-white p-6 rounded-lg shadow">
-            <p class="text-gray-600">Aquí puedes incrustar gráficos de tu análisis de Colab.</p>
+            <p class="text-gray-600">Los datos se sincronizan diariamente a las 8:00 AM desde el archivo maestro "Financial Position".</p>
         </div>
     </div>
 
     <script>
+        // Función para cambiar pestañas
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
         }
-        // Mostrar Financial por defecto ahora que la estamos creando
+
+        // Función para formatear moneda
+        const fmtCurr = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+
+        // --- EL CEREBRO: Carga de datos desde JSON ---
+        async function cargarDatos() {
+            try {
+                // Agregamos un timestamp para evitar que el navegador use datos viejos (cache)
+                const response = await fetch('financial_data.json?t=' + new Date().getTime());
+                const data = await response.json();
+
+                const mapeo = [
+                    { key: 'Bold_CF', id: 'data-bold-cf', varId: 'var-bold-cf' },
+                    { key: 'Bold_SAS', id: 'data-bold-sas', varId: 'var-bold-sas' },
+                    { key: 'Bold_Peru', id: 'data-bold-peru', varId: 'var-bold-peru' }
+                ];
+
+                mapeo.forEach(item => {
+                    if (data[item.key]) {
+                        const info = data[item.key];
+                        // Actualizar Saldo
+                        document.getElementById(item.id).innerText = fmtCurr(info.saldo_actual);
+                        
+                        // Actualizar Variación con color
+                        const varElem = document.getElementById(item.varId);
+                        const variacion = info.d_1_variacion.toFixed(2);
+                        const color = info.d_1_variacion >= 0 ? 'text-green-600' : 'text-red-600';
+                        const flecha = info.d_1_variacion >= 0 ? '▲' : '▼';
+                        
+                        varElem.innerHTML = `<span class="${color} font-bold">${flecha} ${Math.abs(variacion)}%</span> vs ayer`;
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error cargando el JSON:", error);
+                document.querySelectorAll('[id^="data-bold"]').forEach(el => el.innerText = "Error de carga");
+            }
+        }
+
+        // Ejecutar al cargar la página
         showTab('financial');
+        cargarDatos();
     </script>
 </body>
 </html>

@@ -13,13 +13,14 @@
     <nav class="bg-[#001529] p-4 text-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <!-- El nombre del archivo debe ser idéntico al que subas a GitHub -->
+                <!-- Asegúrate de subir el archivo 'logo.png' a tu repositorio principal -->
                 <img src="logo.png" alt="Bold" class="h-10 w-10 object-contain">
                 <h1 class="text-lg font-bold tracking-tight uppercase">Bold Group <span class="font-light text-blue-400">| Tesorería</span></h1>
             </div>
             <div class="flex items-center gap-4">
                 <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border-none outline-none">
-                <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 8:00 AM</div>
+                <!-- Hora actualizada a las 9:00 AM -->
+                <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 9:00 AM</div>
             </div>
         </div>
     </nav>
@@ -46,7 +47,7 @@
             try {
                 const url = fecha ? `history/data_${fecha}.json` : 'financial_data.json';
                 const res = await fetch(url + '?v=' + Date.now());
-                if(!res.ok) throw new Error("No hay datos disponibles.");
+                if(!res.ok) throw new Error("No hay datos disponibles para la fecha seleccionada.");
                 datosGlobales = await res.json();
                 renderizarDashboard();
             } catch (e) { alert(e.message); }

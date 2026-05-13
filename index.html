@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BI Bold - Reportes Pro</title>
+    <title>BI Bold - Reporte Consolidado</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Librerías de Exportación -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
@@ -15,32 +15,30 @@
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-lg font-bold tracking-tight">BOLD GROUP <span class="font-light text-blue-400">| TESORERÍA</span></h1>
             <div class="flex items-center gap-4">
-                <!-- Selector de Fecha (Simulado para el historial) -->
-                <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border-none">
+                <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border-none outline-none">
                 <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 8:00 AM</div>
             </div>
         </div>
     </nav>
 
     <div class="container mx-auto mt-8 p-4">
-        <div class="flex justify-between items-end mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
             <div>
                 <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Reporte de Posición Financiera</h2>
-                <p class="text-slate-500">Gestión de activos y saldos bancarios</p>
+                <p class="text-slate-500 italic text-sm">Gestión de activos y variaciones diarias por entidad</p>
             </div>
-            <!-- Botones de Descarga -->
             <div class="flex gap-2">
-                <button onclick="exportarExcel()" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all">
-                    📊 Descargar Excel
+                <button onclick="exportarExcel()" class="bg-[#1D6F42] hover:bg-[#155231] text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-all">
+                    Excel
                 </button>
-                <button onclick="exportarPDF()" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all">
-                    📕 Descargar PDF
+                <button onclick="exportarPDF()" class="bg-[#A11C1C] hover:bg-[#7D1616] text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-all">
+                    PDF
                 </button>
             </div>
         </div>
 
         <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Los cuadros de las empresas se generan aquí dinámicamente -->
+            <!-- Los datos se inyectan aquí -->
         </div>
     </div>
 
@@ -50,10 +48,9 @@
 
         async function cargarBI(fecha = null) {
             try {
-                // Si hay fecha, intentamos cargar del historial, si no, el actual
                 const url = fecha ? `history/data_${fecha}.json` : 'financial_data.json';
                 const res = await fetch(url + '?v=' + Date.now());
-                if(!res.ok) throw new Error("No hay datos para esta fecha");
+                if(!res.ok) throw new Error("No hay datos disponibles para la fecha seleccionada.");
                 
                 datosGlobales = await res.json();
                 renderizarDashboard();
@@ -68,21 +65,34 @@
 
             Object.keys(datosGlobales).forEach(empresa => {
                 const info = datosGlobales[empresa];
-                const color = empresa === 'Bold_CF' ? 'purple' : (empresa === 'Bold_SAS' ? 'blue' : 'red');
+                const colorClase = empresa === 'Bold_CF' ? 'purple' : (empresa === 'Bold_SAS' ? 'blue' : 'red');
                 
                 const card = `
-                    <div class="space-y-4">
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-${color}-600">
-                            <h3 class="text-${color}-900 font-bold uppercase text-xs tracking-widest">${empresa.replace('_', ' ')}</h3>
+                    <div class="flex flex-col gap-4">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-${colorClase}-600">
+                            <h3 class="text-${colorClase}-900 font-bold uppercase text-xs tracking-widest">${empresa.replace('_', ' ')}</h3>
                             <div class="text-3xl font-black mt-2 text-slate-900">${fmt(info.saldo_actual)}</div>
                         </div>
-                        <div class="space-y-2">
-                            ${info.bancos.map(b => `
-                                <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center">
-                                    <div class="text-sm font-medium text-slate-600">${b.nombre}</div>
-                                    <div class="text-sm font-bold text-slate-900">${fmt(b.saldo)}</div>
-                                </div>
-                            `).join('')}
+                        <div class="flex flex-col gap-2">
+                            ${info.bancos.map(b => {
+                                const esPositivo = b.variacion >= 0;
+                                const colorVar = esPositivo ? 'text-green-600' : 'text-red-600';
+                                const flecha = esPositivo ? '▲' : '▼';
+                                
+                                return `
+                                    <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center hover:border-${colorClase}-300 transition-colors">
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">${b.nombre}</span>
+                                            <span class="text-sm font-bold text-slate-700">${fmt(b.saldo)}</span>
+                                        </div>
+                                        <div class="text-right flex flex-col">
+                                            <span class="text-[11px] font-black ${colorVar}">
+                                                ${flecha} ${Math.abs(b.variacion).toFixed(1)}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -90,8 +100,7 @@
             });
         }
 
-        // --- LÓGICA DE EXPORTACIÓN ---
-
+        // --- LÓGICA DE EXPORTACIÓN (Se mantiene el robustecimiento) ---
         function prepararTabla() {
             const filas = [];
             Object.keys(datosGlobales).forEach(empresa => {
@@ -111,28 +120,29 @@
             const data = prepararTabla();
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Reporte_Tesoreria");
-            XLSX.writeFile(wb, `Reporte_Bold_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.utils.book_append_sheet(wb, ws, "Reporte");
+            XLSX.writeFile(wb, `Reporte_Bold_${new Date().toLocaleDateString()}.xlsx`);
         }
 
         function exportarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("Reporte Consolidado de Tesorería - Bold Group", 14, 15);
+            doc.setFontSize(16);
+            doc.text("Bold Group - Reporte de Tesorería", 14, 15);
+            doc.setFontSize(10);
+            doc.text(`Fecha de reporte: ${new Date().toLocaleString()}`, 14, 22);
             
             const tableData = prepararTabla().map(obj => Object.values(obj));
             doc.autoTable({
-                head: [['Empresa', 'Banco', 'Saldo (USD)', 'Variación']],
+                head: [['Empresa', 'Entidad/Banco', 'Saldo (USD)', 'Var %']],
                 body: tableData,
-                startY: 25,
-                theme: 'striped'
+                startY: 28,
+                headStyles: { fillStyle: 'darkblue' }
             });
-            doc.save(`Reporte_Bold_${new Date().toISOString().split('T')[0]}.pdf`);
+            doc.save("Reporte_Bold_Tesoreria.pdf");
         }
 
-        // Evento cambio de fecha
         document.getElementById('datePicker').addEventListener('change', (e) => cargarBI(e.target.value));
-
         cargarBI();
     </script>
 </body>

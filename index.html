@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BI Bold - Reporte Consolidado</title>
+    <title>Financial Position BackOffice</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Librerías de Exportación -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
@@ -24,7 +23,7 @@
     <div class="container mx-auto mt-8 p-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
             <div>
-                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Reporte de Posición Financiera</h2>
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Financial Position BackOffice</h2>
                 <p class="text-slate-500 italic text-sm">Gestión de activos y variaciones diarias por entidad</p>
             </div>
             <div class="flex gap-2">
@@ -38,8 +37,7 @@
         </div>
 
         <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Los datos se inyectan aquí -->
-        </div>
+            </div>
     </div>
 
     <script>
@@ -100,7 +98,6 @@
             });
         }
 
-        // --- LÓGICA DE EXPORTACIÓN (Se mantiene el robustecimiento) ---
         function prepararTabla() {
             const filas = [];
             Object.keys(datosGlobales).forEach(empresa => {
@@ -121,25 +118,25 @@
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Reporte");
-            XLSX.writeFile(wb, `Reporte_Bold_${new Date().toLocaleDateString()}.xlsx`);
+            XLSX.writeFile(wb, `Financial_Position_${new Date().toLocaleDateString()}.xlsx`);
         }
 
         function exportarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text("Bold Group - Reporte de Tesorería", 14, 15);
+            doc.text("Financial Position BackOffice", 14, 15);
             doc.setFontSize(10);
-            doc.text(`Fecha de reporte: ${new Date().toLocaleString()}`, 14, 22);
+            doc.text(`Generado el: ${new Date().toLocaleString()}`, 14, 22);
             
             const tableData = prepararTabla().map(obj => Object.values(obj));
             doc.autoTable({
                 head: [['Empresa', 'Entidad/Banco', 'Saldo (USD)', 'Var %']],
                 body: tableData,
                 startY: 28,
-                headStyles: { fillStyle: 'darkblue' }
+                headStyles: { fillColor: [0, 21, 41] } // Azul oscuro para combinar con el nav
             });
-            doc.save("Reporte_Bold_Tesoreria.pdf");
+            doc.save("Financial_Position_Report.pdf");
         }
 
         document.getElementById('datePicker').addEventListener('change', (e) => cargarBI(e.target.value));

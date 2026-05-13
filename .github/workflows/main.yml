@@ -1,0 +1,37 @@
+name: Actualización Automática BI Bold
+
+on:
+  schedule:
+    # 21:32 Colombia = 02:32 UTC
+    - cron: '32 2 * * *'
+  workflow_dispatch: # Mantenemos esto para que también puedas darle "Play" manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar librerías
+        run: |
+          pip install pandas gspread google-auth
+
+      - name: Ejecutar Análisis BI
+        env:
+          GOOGLE_CREDS: ${{ secrets.GOOGLE_CREDS }}
+        run: python procesar_finanzas.py
+
+      - name: Subir cambios a la Web
+        run: |
+          git config --global user.name "Bold BI Bot"
+          git config --global user.email "bot@bold.co"
+          git add financial_data.json
+          git commit -m "📊 Prueba de automatización: 9:32 PM" || exit 0
+          git push

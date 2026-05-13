@@ -3,82 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BI Bold - Detalle Bancario</title>
+    <title>BI Bold - Reportes Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Librerías de Exportación -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body class="bg-slate-50 font-sans">
     <nav class="bg-[#001529] p-4 text-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-lg font-bold tracking-tight">BOLD GROUP <span class="font-light text-blue-400">| TESORERÍA</span></h1>
-            <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 8:00 AM</div>
+            <div class="flex items-center gap-4">
+                <!-- Selector de Fecha (Simulado para el historial) -->
+                <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border-none">
+                <div class="text-xs bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">Auto-Update: 8:00 AM</div>
+            </div>
         </div>
     </nav>
 
     <div class="container mx-auto mt-8 p-4">
-        <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Posición Financiera Detallada</h2>
-        <p class="text-slate-500 mb-8">Saldos por entidad y desglose de cuentas bancarias</p>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Sección Bold CF -->
-            <div class="space-y-4">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-600">
-                    <h3 class="text-purple-900 font-bold">BOLD CF</h3>
-                    <div id="total-Bold_CF" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
-                </div>
-                <div id="list-Bold_CF" class="space-y-2"></div>
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Reporte de Posición Financiera</h2>
+                <p class="text-slate-500">Gestión de activos y saldos bancarios</p>
             </div>
-
-            <!-- Sección Bold SAS -->
-            <div class="space-y-4">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-600">
-                    <h3 class="text-blue-900 font-bold">BOLD SAS</h3>
-                    <div id="total-Bold_SAS" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
-                </div>
-                <div id="list-Bold_SAS" class="space-y-2"></div>
+            <!-- Botones de Descarga -->
+            <div class="flex gap-2">
+                <button onclick="exportarExcel()" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all">
+                    📊 Descargar Excel
+                </button>
+                <button onclick="exportarPDF()" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all">
+                    📕 Descargar PDF
+                </button>
             </div>
+        </div>
 
-            <!-- Sección Bold Perú -->
-            <div class="space-y-4">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-red-600">
-                    <h3 class="text-red-900 font-bold">BOLD PERÚ</h3>
-                    <div id="total-Bold_Peru" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
-                </div>
-                <div id="list-Bold_Peru" class="space-y-2"></div>
-            </div>
+        <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Los cuadros de las empresas se generan aquí dinámicamente -->
         </div>
     </div>
 
     <script>
+        let datosGlobales = null;
         const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
 
-        async function cargarBI() {
+        async function cargarBI(fecha = null) {
             try {
-                const res = await fetch('financial_data.json?v=' + Date.now());
-                const data = await res.json();
-
-                Object.keys(data).forEach(empresa => {
-                    const info = data[empresa];
-                    // Actualizar Total Principal
-                    document.getElementById(`total-${empresa}`).innerText = fmt(info.saldo_actual);
-
-                    // Generar lista de bancos
-                    const listContainer = document.getElementById(`list-${empresa}`);
-                    listContainer.innerHTML = info.bancos.map(b => `
-                        <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center hover:shadow-md transition-shadow">
-                            <div>
-                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">${b.nombre}</p>
-                                <p class="text-md font-bold text-slate-700">${fmt(b.saldo)}</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xs font-black ${b.variacion >= 0 ? 'text-green-500' : 'text-red-500'}">
-                                    ${b.variacion >= 0 ? '▲' : '▼'} ${Math.abs(b.variacion).toFixed(1)}%
-                                </span>
-                            </div>
-                        </div>
-                    `).join('');
-                });
-            } catch (e) { console.error("Error:", e); }
+                // Si hay fecha, intentamos cargar del historial, si no, el actual
+                const url = fecha ? `history/data_${fecha}.json` : 'financial_data.json';
+                const res = await fetch(url + '?v=' + Date.now());
+                if(!res.ok) throw new Error("No hay datos para esta fecha");
+                
+                datosGlobales = await res.json();
+                renderizarDashboard();
+            } catch (e) { 
+                alert(e.message);
+            }
         }
+
+        function renderizarDashboard() {
+            const grid = document.getElementById('dashboard-grid');
+            grid.innerHTML = '';
+
+            Object.keys(datosGlobales).forEach(empresa => {
+                const info = datosGlobales[empresa];
+                const color = empresa === 'Bold_CF' ? 'purple' : (empresa === 'Bold_SAS' ? 'blue' : 'red');
+                
+                const card = `
+                    <div class="space-y-4">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-${color}-600">
+                            <h3 class="text-${color}-900 font-bold uppercase text-xs tracking-widest">${empresa.replace('_', ' ')}</h3>
+                            <div class="text-3xl font-black mt-2 text-slate-900">${fmt(info.saldo_actual)}</div>
+                        </div>
+                        <div class="space-y-2">
+                            ${info.bancos.map(b => `
+                                <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center">
+                                    <div class="text-sm font-medium text-slate-600">${b.nombre}</div>
+                                    <div class="text-sm font-bold text-slate-900">${fmt(b.saldo)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // --- LÓGICA DE EXPORTACIÓN ---
+
+        function prepararTabla() {
+            const filas = [];
+            Object.keys(datosGlobales).forEach(empresa => {
+                datosGlobales[empresa].bancos.forEach(b => {
+                    filas.push({
+                        Empresa: empresa.replace('_', ' '),
+                        Banco: b.nombre,
+                        Saldo: b.saldo,
+                        Variacion: b.variacion.toFixed(2) + '%'
+                    });
+                });
+            });
+            return filas;
+        }
+
+        function exportarExcel() {
+            const data = prepararTabla();
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Reporte_Tesoreria");
+            XLSX.writeFile(wb, `Reporte_Bold_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+
+        function exportarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Reporte Consolidado de Tesorería - Bold Group", 14, 15);
+            
+            const tableData = prepararTabla().map(obj => Object.values(obj));
+            doc.autoTable({
+                head: [['Empresa', 'Banco', 'Saldo (USD)', 'Variación']],
+                body: tableData,
+                startY: 25,
+                theme: 'striped'
+            });
+            doc.save(`Reporte_Bold_${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        // Evento cambio de fecha
+        document.getElementById('datePicker').addEventListener('change', (e) => cargarBI(e.target.value));
 
         cargarBI();
     </script>

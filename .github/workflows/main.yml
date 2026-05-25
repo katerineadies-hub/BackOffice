@@ -2,9 +2,9 @@ name: Actualización Automática BI Bold
 
 on:
   schedule:
-    # Corre dos veces al día: 5:00 AM y 3:00 PM hora Colombia
+    # Corre a las 5:00 AM y 3:00 PM hora Colombia
     - cron: '0 10,20 * * *'
-  workflow_dispatch: # Mantenemos la ejecución manual por si necesitas forzarla
+  workflow_dispatch: # Permite ejecución manual instantánea
 
 jobs:
   build:
@@ -21,7 +21,8 @@ jobs:
 
       - name: Instalar librerías
         run: |
-          pip install pandas gspread google-auth
+          # Añadimos openpyxl para poder leer archivos Excel nativos (.xlsx)
+          pip install pandas gspread google-auth openpyxl
 
       - name: Ejecutar Análisis BI
         env:
@@ -32,7 +33,7 @@ jobs:
         run: |
           git config --global user.name "Bold BI Bot"
           git config --global user.email "bot@bold.co"
-          # Conservamos intacta la subida de los saldos y de la carpeta history
+          # Guardamos los JSON de datos e historial en el repositorio
           git add financial_data.json history/
-          git commit -m "📊 Actualización programada (Doble Horario): Posición y CUD" || exit 0
+          git commit -m "🏛️ Motor Maya: Extracción CUD y saldos actualizada" || exit 0
           git push

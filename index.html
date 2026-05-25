@@ -54,46 +54,43 @@
                     <button onclick="exportarPDF()" class="bg-[#A11C1C] hover:bg-[#7D1616] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all">PDF</button>
                 </div>
             </div>
-
-            <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                </div>
+            <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8"></div>
         </section>
 
         <section id="module-cud" class="module-content hidden">
             <div class="mb-8">
                 <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Monitoreo de Cuenta CUD</h2>
-                <p class="text-slate-500 italic text-sm">Control automático de entradas, salidas y saldos del Banco Central</p>
+                <p class="text-slate-500 italic text-sm">Análisis Automatizado via Motor Maya (Extracción Directa de Extracto)</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-slate-900">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Saldo Disponible CUD</span>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Saldo Calculado CUD</span>
                     <div id="cud-saldo" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
                     <div id="cud-fecha" class="text-xs text-slate-400 mt-1">--</div>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Total Entradas (Último Día)</span>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Total Créditos Parseados</span>
                     <div id="cud-entradas" class="text-3xl font-black mt-2 text-green-600">$0.00</div>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Total Salidas (Último Día)</span>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Total Débitos Parseados</span>
                     <div id="cud-salidas" class="text-3xl font-black mt-2 text-red-600">$0.00</div>
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="font-bold text-slate-700 text-sm uppercase tracking-wider">Auditoría de Últimos Movimientos Cargados</h3>
+                    <h3 class="font-bold text-slate-700 text-sm uppercase tracking-wider">Auditoría de Movimientos Parseados</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-600">
                         <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold">
                             <tr>
-                                <th class="p-4">Fecha</th>
-                                <th class="p-4">Concepto / Detalle</th>
-                                <th class="p-4 text-right">Entradas (+)</th>
-                                <th class="p-4 text-right">Salidas (-)</th>
-                                <th class="p-4 text-right">Saldo Línea</th>
+                                <th class="p-4">Fecha Valor</th>
+                                <th class="p-4">Descripción (Pormenor)</th>
+                                <th class="p-4 text-right">Créditos (+)</th>
+                                <th class="p-4 text-right">Débitos (-)</th>
                             </tr>
                         </thead>
                         <tbody id="cud-tabla-body">
@@ -106,7 +103,7 @@
         <section id="module-otros" class="module-content hidden">
             <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-200 text-center">
                 <h2 class="text-xl font-bold text-slate-400">Módulo de Radicación</h2>
-                <p class="text-slate-400 mt-2">Listo para conectar mañana con tus flujos de aprobación de solicitudes.</p>
+                <p class="text-slate-400 mt-2">Listo para conectar con tus flujos de aprobación de solicitudes de pago.</p>
             </div>
         </section>
 
@@ -116,19 +113,13 @@
         let datosGlobales = null;
         const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
 
-        // FUNCIÓN PARA CAMBIAR ENTRE MÓDULOS (BOTONES)
         function showModule(moduleId) {
-            // Ocultar todos los módulos
             document.querySelectorAll('.module-content').forEach(m => m.classList.add('hidden'));
-            // Quitar estilos activos de botones
             document.querySelectorAll('nav button').forEach(b => {
                 b.classList.remove('bg-blue-600', 'text-white', 'shadow-lg');
                 b.classList.add('text-slate-300');
             });
-
-            // Mostrar módulo seleccionado
             document.getElementById(`module-${moduleId}`).classList.remove('hidden');
-            // Estilo activo al botón
             const activeBtn = document.getElementById(`btn-${moduleId}`);
             if (activeBtn) {
                 activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-lg');
@@ -136,7 +127,6 @@
             }
         }
 
-        // LÓGICA DE CARGA DE DATOS (Módulo Financial + CUD)
         async function cargarBI(fecha = null) {
             try {
                 const url = fecha ? `history/data_${fecha}.json` : 'financial_data.json';
@@ -144,7 +134,7 @@
                 if(!res.ok) throw new Error("No hay datos disponibles.");
                 datosGlobales = await res.json();
                 renderizarDashboard();
-                renderizarCUD(); // Sincroniza la visualización de la cuenta CUD
+                renderizarCUD();
             } catch (e) { alert(e.message); }
         }
 
@@ -152,8 +142,7 @@
             const grid = document.getElementById('dashboard-grid');
             grid.innerHTML = '';
             Object.keys(datosGlobales).forEach(empresa => {
-                if (empresa === "CUD") return; // Evita mezclar los flujos del CUD en las tarjetas de las compañías
-                
+                if (empresa === "CUD") return;
                 const info = datosGlobales[empresa];
                 const colorClase = empresa === 'Bold_CF' ? 'purple' : (empresa === 'Bold_SAS' ? 'blue' : 'red');
                 grid.innerHTML += `
@@ -183,13 +172,12 @@
             });
         }
 
-        // NUEVA FUNCIÓN PARA PROCESAR E INYECTAR LOS DATOS DE TU EXTRACTO CUD
         function renderizarCUD() {
             if (!datosGlobales || !datosGlobales.CUD) return;
             const cud = datosGlobales.CUD;
             
             document.getElementById('cud-saldo').innerText = fmt(cud.saldo_actual || 0);
-            document.getElementById('cud-fecha').innerText = `Último movimiento registrado: ${cud.fecha_actualizacion || 'N/A'}`;
+            document.getElementById('cud-fecha').innerText = `Último procesamiento de extracto: ${cud.fecha_actualizacion || 'N/A'}`;
             document.getElementById('cud-entradas').innerText = fmt(cud.entradas_hoy || 0);
             document.getElementById('cud-salidas').innerText = fmt(cud.salidas_hoy || 0);
 
@@ -202,20 +190,18 @@
                             <td class="p-4 font-medium text-slate-700">${m.concepto}</td>
                             <td class="p-4 text-right font-bold text-green-600">${m.entradas > 0 ? '+' + fmt(m.entradas) : '-'}</td>
                             <td class="p-4 text-right font-bold text-red-600">${m.salidas > 0 ? '-' + fmt(m.salidas) : '-'}</td>
-                            <td class="p-4 text-right font-mono font-bold text-slate-900">${fmt(m.saldo)}</td>
                         </tr>
                     `).join('');
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">No hay movimientos registrados en la pestaña CUD.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Arrastra tu archivo extracto 'cud_raw.xlsx' al repositorio para ver los movimientos aquí.</td></tr>`;
                 }
             }
         }
 
-        // LÓGICA DE EXPORTACIÓN
         function prepararTabla() {
             const filas = [];
             Object.keys(datosGlobales).forEach(empresa => {
-                if (empresa === "CUD") return; // Excluye los datos del extracto CUD del reporte Excel de las empresas
+                if (empresa === "CUD") return;
                 datosGlobales[empresa].bancos.forEach(b => {
                     filas.push({ Empresa: empresa.replace('_', ' '), Banco: b.nombre, Saldo: b.saldo, Variacion: b.variacion.toFixed(2) + '%' });
                 });

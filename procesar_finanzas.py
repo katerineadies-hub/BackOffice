@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import gspread
 import os
+import glob
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
@@ -20,57 +21,46 @@ def limpiar_monto_final(valor):
         return 0.0
     s = str(valor).replace('$', '').replace('S/.', '').replace(' ', '').replace('.', '').strip()
     if ',' in s:
-        s = s.replace(',', '.') # Convertir decimales a formato Python standard
+        s = s.replace(',', '.') 
     try: return round(float(s), 2)
     except: return 0.0
 
 # --- 2. MOTOR DE PARSEO DE EXCEL CUD (REGLAS MAYA) ---
 def procesar_excel_cud_raw(ruta_archivo):
-    print("🧠 Ejecutando Motor Maya para el análisis del extracto CUD...")
+    print(f"🧠 Motor Maya analizando el archivo: {ruta_archivo}")
     try:
-        # Leer el archivo sin cabeceras iniciales para evaluar casos
         df_raw = pd.read_excel(ruta_archivo, header=None)
         
-        # Determinar si es Caso A o Caso B buscando palabras clave en las primeras filas
+        # Unimos las primeras filas para buscar palabras clave sin importar el caso
         contenido_primeras_filas = " ".join(df_raw.iloc[0:20, 0].dropna().astype(str).tolist())
         
         if "consultas de movimientos" in contenido_primeras_filas.lower() or len(df_raw) > 56:
             print("📋 Detectado Caso A: Reporte consultas de movimientos")
-            # Eliminar filas de abajo (37-56 en escala relativa desde el final si aplica, o por rangos)
-            # Para evitar errores de desborde, localizamos dinámicamente donde termina la data real o limpiamos índices fijados
             df_parsed = df_raw.copy()
             if len(df_parsed) > 56:
                 df_parsed = df_parsed.drop(range(36, min(56, len(df_parsed))))
             df_parsed = df_parsed.drop(range(0, 18)).reset_index(drop=True)
             
-            # Asignar cabecera de la primera fila útil
             df_parsed.columns = df_parsed.iloc[0]
             df_parsed = df_parsed[1:].reset_index(drop=True)
-            
         else:
-            print("📑 Detectado Caso B: Reporte extracto cuenta")
-            # Buscar la fila de cabecera que contiene "SECUEN."
+            print("📑 Detectado Caso B: Reporte extracto cuenta o similar")
             idx_cabecera = next(i for i, row in df_raw.iterrows() if row.astype(str).str.contains("SECUEN.").any())
             df_parsed = pd.read_excel(ruta_archivo, skiprows=idx_cabecera)
             
-        # Normalizar nombres de columnas a minúsculas y quitar espacios
         df_parsed.columns = [str(c).strip().lower() for c in df_parsed.columns]
         
-        # Filtrar solo filas con secuencia numérica válida
         col_secuencia = [c for c in df_parsed.columns if "secuen" in c][0]
         df_parsed = df_parsed[pd.to_numeric(df_parsed[col_secuencia], errors='coerce').notna()]
         
-        # Columnas obligatorias del protocolo Maya
         columnas_finales = [
             'secuen.', 'fecha valor', 'fecha liq.', 'suc.', 'trans.', 'port.', 
             'valor débito', 'valor crédito', 'cuenta contraparte', 'portafolio contraparte', 
             'referencia', 'pormenor', 'id. tro. origen', 'id. tro destino', 'nombre tro.', 'usuario de aprobación'
         ]
         
-        # Ajustar dinámicamente columnas faltantes con valores vacíos
         for col in columnas_finales:
             if col not in df_parsed.columns:
-                # Mapeos lógicos alternativos (ej: concepto -> pormenor)
                 if col == 'pormenor' and 'concepto' in df_parsed.columns:
                     df_parsed['pormenor'] = df_parsed['concepto']
                 elif col == 'pormenor' and 'descripción transacción' in df_parsed.columns:
@@ -79,11 +69,7 @@ def procesar_excel_cud_raw(ruta_archivo):
                     df_parsed[col] = ""
                     
         df_final = df_parsed[columnas_finales].copy()
-        
-        # Limpieza de textos y GMF según protocolo
         df_final['pormenor'] = df_final['pormenor'].astype(str).apply(lambda x: "GMF" if "GMF" in x else x)
-        
-        # Limpieza y conversión contable de montos
         df_final['valor débito'] = df_final['valor débito'].apply(limpiar_monto_final)
         df_final['valor crédito'] = df_final['valor crédito'].apply(limpiar_monto_final)
         
@@ -124,17 +110,32 @@ def ejecutar_analisis_bi():
 
             analisis_web[p_id] = {"saldo_actual": sum(b['saldo'] for b in bancos_detalle), "bancos": sorted(bancos_detalle, key=lambda x: x['saldo'], reverse=True)}
 
-        # --- PARTE B: AUTOMATISMO PARSER CUD (SIN DEPENDER DE GOOGLE SHEETS) ---
-        ruta_cud_excel = "cud_raw.xlsx"
-        if os.path.exists(ruta_cud_excel):
-            df_cud = procesar_excel_cud_raw(ruta_cud_excel)
+        # --- PARTE B: AUTOMATISMO PARSER CUD DINÁMICO (POR CARPETA) ---
+        carpeta_extractos = "extracts_cud"
+        if not os.path.exists(carpeta_extractos):
+            os.makedirs(carpeta_extractos)
+            
+        # Escaneamos cualquier archivo Excel con cualquier nombre dentro de la carpeta
+        excel_files = glob.glob(f"{carpeta_extractos}/*.xlsx") + glob.glob(f"{carpeta_extractos}/*.xls")
+        
+        if excel_files:
+            # Ordenamos por fecha de modificación para tomar el último que hayas subido
+            excel_files.sort(key=os.path.getmtime)
+            archivo_mas_reciente = excel_files[-1]
+            
+            df_cud = procesar_excel_cud_raw(archivo_mas_reciente)
             if not df_cud.empty:
                 total_debitos = float(df_cud['valor débito'].sum())
                 total_creditos = float(df_cud['valor crédito'].sum())
-                
-                # Asumimos cálculo acumulado (si no hay saldo inicial explícito lo tomamos base)
                 saldo_calculado = total_creditos - total_debitos
-                fecha_reporte = datetime.now().strftime('%d/%m/%Y')
+                
+                # EXTRAER FECHA REAL DEL EXTRACTO (Protocolo Contable Histórico)
+                try:
+                    fecha_reporte = str(df_cud['fecha valor'].dropna().iloc[-1]).strip()
+                    if " " in fecha_reporte:
+                        fecha_reporte = fecha_reporte.split(" ")[0] # Deja solo DD/MM/YYYY
+                except:
+                    fecha_reporte = datetime.now().strftime('%d/%m/%Y')
                 
                 historial_movimientos = []
                 for _, row in df_cud.tail(15).iterrows():
@@ -142,8 +143,7 @@ def ejecutar_analisis_bi():
                         "fecha": str(row['fecha valor']),
                         "concepto": str(row['pormenor']),
                         "entradas": float(row['valor crédito']),
-                        "salidas": float(row['valor débito']),
-                        "saldo": float(row['valor crédito'] - row['valor débito']) 
+                        "salidas": float(row['valor débito'])
                     })
                 
                 analisis_web["CUD"] = {
@@ -154,7 +154,7 @@ def ejecutar_analisis_bi():
                     "historial": historial_movimientos
                 }
                 
-                # --- CONTROL DE SALDOS HISTÓRICOS EN LA NUBE ---
+                # --- CONTROL ACUMULATIVO DE SALDOS EN LA NUBE ---
                 ruta_historico_central = "history/cud_historical.json"
                 historico_data = []
                 if os.path.exists(ruta_historico_central):
@@ -162,7 +162,7 @@ def ejecutar_analisis_bi():
                         try: historico_data = json.load(h_f)
                         except: historico_data = []
                 
-                # Evitar duplicar la misma fecha
+                # Pisamos o añadimos el registro basándonos en la fecha real del documento
                 historico_data = [h for h in historico_data if h['fecha'] != fecha_reporte]
                 historico_data.append({
                     "fecha": fecha_reporte,
@@ -171,14 +171,13 @@ def ejecutar_analisis_bi():
                     "salidas": total_debitos
                 })
                 
-                # Guardar el histórico centralizado para proyecciones futuras
                 with open(ruta_historico_central, 'w') as h_f:
                     json.dump(historico_data, h_f, indent=4)
                     
             else:
                 analisis_web["CUD"] = {"saldo_actual": 0.0, "entradas_hoy": 0.0, "salidas_hoy": 0.0, "historial": []}
         else:
-            print("ℹ️ No se detectó archivo 'cud_raw.xlsx' en la raíz. Usando valores en cero.")
+            print("ℹ️ Carpeta 'extracts_cud' vacía. Esperando carga de archivos.")
             analisis_web["CUD"] = {"saldo_actual": 0.0, "entradas_hoy": 0.0, "salidas_hoy": 0.0, "historial": []}
 
         # --- 4. GUARDADO DE RESULTADOS ---
@@ -190,7 +189,7 @@ def ejecutar_analisis_bi():
         with open(f'history/data_{fecha_hoy}.json', 'w') as f:
             json.dump(analisis_web, f, indent=4)
         
-        print("✅ Consolidación terminada exitosamente.")
+        print("✅ Sincronización completa.")
     except Exception as e:
         print(f"❌ ERROR CRÍTICO GENERAL: {str(e)}")
         exit(1)

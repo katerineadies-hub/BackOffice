@@ -1,6 +1,6 @@
 {
     "Bold_CF": {
-        "saldo_actual": 310681886157.73004,
+        "saldo_actual": 311561710833.0101,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
@@ -24,18 +24,18 @@
             },
             {
                 "nombre": "CredicorpCapital Bold CF",
-                "saldo": 5437433674.11,
-                "variacion": 0.08958993845133499
+                "saldo": 5439397016.5,
+                "variacion": 0.03610788669200096
+            },
+            {
+                "nombre": "Bancolombia",
+                "saldo": 3393229009.91,
+                "variacion": 33.11462231449734
             },
             {
                 "nombre": "Emisi\u00f3n MCCA",
                 "saldo": 2885755990.94,
                 "variacion": 179.33182311476764
-            },
-            {
-                "nombre": "Bancolombia",
-                "saldo": 2549103134.51,
-                "variacion": -10.95002209561466
             },
             {
                 "nombre": "Entrecuentas RBM",
@@ -49,18 +49,18 @@
             },
             {
                 "nombre": "Efecty",
-                "saldo": 154757761.0,
-                "variacion": -14.950393890725206
+                "saldo": 126450761.0,
+                "variacion": -18.291166670471537
             },
             {
                 "nombre": "Citibank 3021",
-                "saldo": 52447912.95,
-                "variacion": 71.34055385147792
+                "saldo": 114490370.44,
+                "variacion": 118.29347251461984
             },
             {
                 "nombre": "JP Morgan USD",
                 "saldo": 934425.67,
-                "variacion": 5.327193533818406
+                "variacion": 0.0
             },
             {
                 "nombre": "Bold CF 2157",
@@ -70,12 +70,17 @@
         ]
     },
     "Bold_SAS": {
-        "saldo_actual": 22293903354.820004,
+        "saldo_actual": 23784782491.180004,
         "bancos": [
             {
+                "nombre": "Bancolombia 0126",
+                "saldo": 8340708709.28,
+                "variacion": 145.58630574790317
+            },
+            {
                 "nombre": "Davivienda",
-                "saldo": 8661693219.17,
-                "variacion": -10.14223332676742
+                "saldo": 6021151519.72,
+                "variacion": -30.485283103838995
             },
             {
                 "nombre": "Bold CF 4755",
@@ -83,19 +88,9 @@
                 "variacion": 52.62417751845224
             },
             {
-                "nombre": "Bancolombia 0126",
-                "saldo": 3396243403.67,
-                "variacion": 2475.947903138099
-            },
-            {
                 "nombre": "Bold CF 4070",
                 "saldo": 2233809798.19,
                 "variacion": -73.28224507770258
-            },
-            {
-                "nombre": "Bancolombia 5928",
-                "saldo": 1141987718.3,
-                "variacion": -67.63942067013649
             },
             {
                 "nombre": "Bold CF3016",
@@ -109,8 +104,13 @@
             },
             {
                 "nombre": "Bancolombia 9802",
-                "saldo": 523559641.86,
-                "variacion": 36.26639480987669
+                "saldo": 442522410.79,
+                "variacion": -15.478127913394319
+            },
+            {
+                "nombre": "Bancolombia 5928",
+                "saldo": 366587641.79,
+                "variacion": -67.89916074266418
             },
             {
                 "nombre": "ScotiaBank",
@@ -133,6 +133,11 @@
                 "variacion": 0.08424438563544104
             },
             {
+                "nombre": "Citibank",
+                "saldo": 45344534.15,
+                "variacion": 2223.3395750999935
+            },
+            {
                 "nombre": "N\u00f3mina SAS 0586",
                 "saldo": 8114293.02,
                 "variacion": 0.0
@@ -141,11 +146,6 @@
                 "nombre": "N\u00f3mina CP 5296",
                 "saldo": 2112951.25,
                 "variacion": 0.0
-            },
-            {
-                "nombre": "Citibank",
-                "saldo": 1951696.37,
-                "variacion": -57.6797966622878
             }
         ]
     },

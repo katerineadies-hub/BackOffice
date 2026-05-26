@@ -215,82 +215,82 @@
         ]
     },
     "CUD": {
-        "saldo_actual": 0.0,
-        "entradas_hoy": 0.0,
-        "salidas_hoy": 0.0,
+        "saldo_actual": 25881557067.870003,
+        "entradas_hoy": 54650106379.29,
+        "salidas_hoy": 28768549311.42,
         "fecha_actualizacion": "2026-05-22",
         "historial": [
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "  ",
-                "entradas": 0.0,
+                "entradas": 24686588379.29,
                 "salidas": 0.0
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "D\u00e9bito para Pago CICLO 1 ACH de la entidad Bold. Compa\u00f1\u00eda de Financiamiento S.A",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 20635274456.18
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "2026052291829445LIQ Bold Compania de Fin MCCA",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 14920079.5
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "2026052291829446LIQ Bold Compania de Fin MCCA",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 1033092455.69
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "Comp SVB 210526",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 9966404.0
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "SERVICIO LIQUIDACI\u00c3?N TARIFA TRANSACCIONAL - VALOR: 38900 + IVA: 7391",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 46291.0
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "GMF",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 185.16
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "D\u00e9bito para Pago CICLO 2 ACH de la entidad Bold. Compa\u00f1\u00eda de Financiamiento S.A",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 4686879747.79
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "TRANSLADO DE FONDOS POR BOLD.CO SAS COL CUENTA 0090923021",
-                "entradas": 0.0,
+                "entradas": 27000000000.0,
                 "salidas": 0.0
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "P2P COMPENSACION REDEBAN ENTRE CUENTAS\n",
-                "entradas": 0.0,
+                "entradas": 2390000.0,
                 "salidas": 0.0
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "BOLD COMPA\u00d1IA DE FINANCIAMIENTO SA NIT 901522349-3\n",
-                "entradas": 0.0,
+                "entradas": 2961128000.0,
                 "salidas": 0.0
             },
             {
                 "fecha": "2026-05-22 00:00:00",
                 "concepto": "D\u00e9bito para Pago CICLO 3 ACH de la entidad Bold. Compa\u00f1\u00eda de Financiamiento S.A",
                 "entradas": 0.0,
-                "salidas": 0.0
+                "salidas": 2388369692.1
             }
         ]
     }

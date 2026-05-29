@@ -1,11 +1,11 @@
 {
     "Bold_CF": {
-        "saldo_actual": 229163481080.72,
+        "saldo_actual": 227012428273.63,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
-                "saldo": 190252255773.78,
-                "variacion": 1.0482871201686654
+                "saldo": 188101202966.69,
+                "variacion": -1.1306319593118055
             },
             {
                 "nombre": "Adquirencia TAPI",

@@ -3,229 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BackOffice Bold - Centro de Control</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <title>Dashboard - Bold</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
-<body class="bg-slate-50 font-sans">
-    
-    <nav class="bg-[#001529] text-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" alt="Bold" class="h-10 w-10 object-contain">
-                    <h1 class="text-sm md:text-lg font-bold tracking-tight uppercase">Bold Group <span class="font-light text-blue-400">| BackOffice</span></h1>
-                </div>
+<body>
 
-                <div class="hidden md:flex items-center gap-2">
-                    <button onclick="showModule('financial')" id="btn-financial" class="px-4 py-2 rounded-lg text-sm font-bold transition-all bg-blue-600 text-white shadow-lg">
-                        Financial Position
-                    </button>
-                    <button onclick="showModule('cud')" id="btn-cud" class="px-4 py-2 rounded-lg text-sm font-bold transition-all text-slate-300 hover:bg-slate-800">
-                        Monitoreo CUD
-                    </button>
-                    <button onclick="showModule('otros')" id="btn-otros" class="px-4 py-2 rounded-lg text-sm font-bold transition-all text-slate-300 hover:bg-slate-800">
-                        Radicación Pagos
-                    </button>
-                </div>
-
-                <div class="text-[10px] bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/30">
-                    Auto-Update: 5:00 AM / 3:00 PM
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="container mx-auto mt-8 p-4">
-
-        <section id="module-financial" class="module-content">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Financial Position BackOffice</h2>
-                    <div class="flex items-center gap-4">
-                        <p class="text-slate-500 italic text-sm">Gestión de activos y variaciones diarias</p>
-                        <input type="date" id="datePicker" class="text-slate-900 text-xs rounded px-2 py-1 border border-slate-300 outline-none">
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="exportarExcel()" class="bg-[#1D6F42] hover:bg-[#155231] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all">Excel</button>
-                    <button onclick="exportarPDF()" class="bg-[#A11C1C] hover:bg-[#7D1616] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all">PDF</button>
-                </div>
-            </div>
-            <div id="dashboard-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8"></div>
-        </section>
-
-        <section id="module-cud" class="module-content hidden">
-            <div class="mb-8">
-                <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Monitoreo de Cuenta CUD</h2>
-                <p class="text-slate-500 italic text-sm">Análisis Automatizado via Motor Maya (Extracción Directa de Extracto)</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-slate-900">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Saldo Calculado CUD</span>
-                    <div id="cud-saldo" class="text-3xl font-black mt-2 text-slate-900">$0.00</div>
-                    <div id="cud-fecha" class="text-xs text-slate-400 mt-1">--</div>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Total Créditos Parseados</span>
-                    <div id="cud-entradas" class="text-3xl font-black mt-2 text-green-600">$0.00</div>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Total Débitos Parseados</span>
-                    <div id="cud-salidas" class="text-3xl font-black mt-2 text-red-600">$0.00</div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="font-bold text-slate-700 text-sm uppercase tracking-wider">Auditoría de Movimientos Parseados</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold">
-                            <tr>
-                                <th class="p-4">Fecha Valor</th>
-                                <th class="p-4">Descripción (Pormenor)</th>
-                                <th class="p-4 text-right">Créditos (+)</th>
-                                <th class="p-4 text-right">Débitos (-)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cud-tabla-body">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="module-otros" class="module-content hidden">
-            <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-200 text-center">
-                <h2 class="text-xl font-bold text-slate-400">Módulo de Radicación</h2>
-                <p class="text-slate-400 mt-2">Listo para conectar con tus flujos de aprobación de solicitudes de pago.</p>
-            </div>
-        </section>
-
-    </main>
-
-    <script>
-        let datosGlobales = null;
-        const fmt = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
-
-        function showModule(moduleId) {
-            document.querySelectorAll('.module-content').forEach(m => m.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(b => {
-                b.classList.remove('bg-blue-600', 'text-white', 'shadow-lg');
-                b.classList.add('text-slate-300');
-            });
-            document.getElementById(`module-${moduleId}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${moduleId}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-lg');
-                activeBtn.classList.remove('text-slate-300');
-            }
-        }
-
-        async function cargarBI(fecha = null) {
-            try {
-                const url = fecha ? `history/data_${fecha}.json` : 'financial_data.json';
-                const res = await fetch(url + '?v=' + Date.now());
-                if(!res.ok) throw new Error("No hay datos disponibles.");
-                datosGlobales = await res.json();
-                renderizarDashboard();
-                renderizarCUD();
-            } catch (e) { alert(e.message); }
-        }
-
-        function renderizarDashboard() {
-            const grid = document.getElementById('dashboard-grid');
-            grid.innerHTML = '';
-            Object.keys(datosGlobales).forEach(empresa => {
-                if (empresa === "CUD") return;
-                const info = datosGlobales[empresa];
-                const colorClase = empresa === 'Bold_CF' ? 'purple' : (empresa === 'Bold_SAS' ? 'blue' : 'red');
-                grid.innerHTML += `
-                    <div class="flex flex-col gap-4">
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-${colorClase}-600">
-                            <h3 class="text-${colorClase}-900 font-bold uppercase text-xs tracking-widest">${empresa.replace('_', ' ')}</h3>
-                            <div class="text-3xl font-black mt-2 text-slate-900">${fmt(info.saldo_actual)}</div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            ${info.bancos.map(b => {
-                                const esPositivo = b.variacion >= 0;
-                                return `
-                                    <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 flex justify-between items-center">
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">${b.nombre}</span>
-                                            <span class="text-sm font-bold text-slate-700">${fmt(b.saldo)}</span>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="text-[11px] font-black ${esPositivo ? 'text-green-600' : 'text-red-600'}">
-                                                ${esPositivo ? '▲' : '▼'} ${Math.abs(b.variacion).toFixed(1)}%
-                                            </span>
-                                        </div>
-                                    </div>`;
-                            }).join('')}
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function renderizarCUD() {
-            if (!datosGlobales || !datosGlobales.CUD) return;
-            const cud = datosGlobales.CUD;
+    <div class="dashboard-layout">
+        
+        <aside class="sidebar">
+            <div class="logo">bold</div>
             
-            document.getElementById('cud-saldo').innerText = fmt(cud.saldo_actual || 0);
-            document.getElementById('cud-fecha').innerText = `Último procesamiento de extracto: ${cud.fecha_actualizacion || 'N/A'}`;
-            document.getElementById('cud-entradas').innerText = fmt(cud.entradas_hoy || 0);
-            document.getElementById('cud-salidas').innerText = fmt(cud.salidas_hoy || 0);
+            <nav class="menu-navegacion">
+                <div class="grupo-menu">
+                    <span class="titulo-grupo">Cuentas del comercio</span>
+                    <ul>
+                        <li><a href="#"><i class='bx bx-search-alt'></i> Buscar cuentas</a></li>
+                    </ul>
+                </div>
 
-            const tbody = document.getElementById('cud-tabla-body');
-            if (tbody) {
-                if (cud.historial && cud.historial.length > 0) {
-                    tbody.innerHTML = cud.historial.map(m => `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/80 transition-colors">
-                            <td class="p-4 font-mono text-xs text-slate-500">${m.fecha}</td>
-                            <td class="p-4 font-medium text-slate-700">${m.concepto}</td>
-                            <td class="p-4 text-right font-bold text-green-600">${m.entradas > 0 ? '+' + fmt(m.entradas) : '-'}</td>
-                            <td class="p-4 text-right font-bold text-red-600">${m.salidas > 0 ? '-' + fmt(m.salidas) : '-'}</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Arrastra tu archivo extracto 'cud_raw.xlsx' al repositorio para ver los movimientos aquí.</td></tr>`;
-                }
-            }
-        }
+                <div class="grupo-menu">
+                    <span class="titulo-grupo">Clientes</span>
+                    <ul>
+                        <li><a href="#"><i class='bx bx-search-alt'></i> Buscar clientes</a></li>
+                    </ul>
+                </div>
 
-        function prepararTabla() {
-            const filas = [];
-            Object.keys(datosGlobales).forEach(empresa => {
-                if (empresa === "CUD") return;
-                datosGlobales[empresa].bancos.forEach(b => {
-                    filas.push({ Empresa: empresa.replace('_', ' '), Banco: b.nombre, Saldo: b.saldo, Variacion: b.variacion.toFixed(2) + '%' });
-                });
-            });
-            return filas;
-        }
+                <div class="grupo-menu">
+                    <span class="titulo-grupo">Comercios</span>
+                    <ul>
+                        <li class="activo"><a href="#"><i class='bx bx-search-alt'></i> Búsqueda</a></li>
+                        <li><a href="#"><i class='bx bx-credit-card-front'></i> Payouts</a></li>
+                        <li><a href="#"><i class='bx bx-devices'></i> Terminales</a></li>
+                    </ul>
+                </div>
 
-        function exportarExcel() {
-            const ws = XLSX.utils.json_to_sheet(prepararTabla());
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Reporte");
-            XLSX.writeFile(wb, "Financial_Position.xlsx");
-        }
+                <div class="grupo-menu">
+                    <span class="titulo-grupo">Pagos</span>
+                    <ul>
+                        <li><a href="#"><i class='bx bx-dollar-circle'></i> Transacciones</a></li>
+                        <li><a href="#"><i class='bx bx-shield-quarter'></i> Disputas</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
 
-        function exportarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Financial Position BackOffice", 14, 15);
-            doc.autoTable({ head: [['Empresa', 'Banco', 'Saldo', 'Var %']], body: prepararTabla().map(obj => Object.values(obj)), startY: 25 });
-            doc.save("Reporte_Bold.pdf");
-        }
+        <main class="contenido-principal">
+            <div class="cabecera-seccion">
+                <a href="#" class="enlace-atras"><i class='bx bx-chevron-left'></i> Búsqueda</a>
+                <h1>Búsqueda avanzada de comercios</h1>
+                <p>Ingresa los datos del comercio que estás buscando...</p>
+            </div>
+        </main>
 
-        document.getElementById('datePicker').addEventListener('change', (e) => cargarBI(e.target.value));
-        cargarBI();
-    </script>
+    </div>
+
 </body>
 </html>

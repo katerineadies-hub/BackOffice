@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Bold</title>
+    <title>Dashboard FinOps - Bold</title>
     <link rel="stylesheet" href="estilos.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -43,19 +43,204 @@
                     <ul>
                         <li><a href="#"><i class='bx bx-dollar-circle'></i> Transacciones</a></li>
                         <li><a href="#"><i class='bx bx-shield-quarter'></i> Disputas</a></li>
+                        <li><a href="#"><i class='bx bx-refresh'></i> Contracargos</a></li>
                     </ul>
                 </div>
             </nav>
         </aside>
 
         <main class="contenido-principal">
-            <div class="cabecera-seccion">
-                <a href="#" class="enlace-atras"><i class='bx bx-chevron-left'></i> Búsqueda</a>
-                <h1>Búsqueda avanzada de comercios</h1>
-                <p>Ingresa los datos del comercio que estás buscando...</p>
+            
+            <div class="tarjeta-dashboard">
+                <div class="cabecera-tarjeta">
+                    <h2><i class='bx bx-trending-up'></i> Posición Financiera (Saldos de Bancos)</h2>
+                    <span class="badge-actualizado">Corte Control Diario</span>
+                </div>
+                
+                <table class="tabla-saldos">
+                    <thead>
+                        <tr>
+                            <th>Entidad Bancaria</th>
+                            <th>Entidad Operativa</th>
+                            <th>Tipo de Cuenta / Uso</th>
+                            <th>Saldo Disponible (COP)</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Banco de la República (CUD)</strong></td>
+                            <td>Bold CF</td>
+                            <td>Cuenta Depósito Principal</td>
+                            <td class="monto">$117.558.767.766,32</td>
+                            <td><span class="status-ok">Conciliado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bancolombia</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Cuenta Corriente - Payouts</td>
+                            <td class="monto">$45.230.100.000,00</td>
+                            <td><span class="status-ok">Conciliado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bancolombia</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Cuenta Ahorros (4755) - Fondeo</td>
+                            <td class="monto">$12.850.400.000,00</td>
+                            <td><span class="status-ok">Monitoreado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Citibank (City)</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Cuenta Recaudo Opex (3021)</td>
+                            <td class="monto">$24.500.000.000,00</td>
+                            <td><span class="status-ok">Extracto Ok</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Davivienda</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Dispersión Alterna Payouts</td>
+                            <td class="monto">$15.320.000.000,00</td>
+                            <td><span class="status-ok">Conciliado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>JP Morgan</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Monetizaciones / Divisas</td>
+                            <td class="monto">$32.110.000.000,00</td>
+                            <td><span class="status-ok">Operativo</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Credicorp Capital</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Fondo Inversión Colectiva (FIC)</td>
+                            <td class="monto">$58.420.000.000,00</td>
+                            <td><span class="status-ok">Rentabilidad</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scotiabank Colpatria</strong></td>
+                            <td>Bold SAS</td>
+                            <td>Cuenta Recaudo Comercial</td>
+                            <td class="monto">$6.150.000.000,00</td>
+                            <td><span class="status-ok">Operativo</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Banco de la Nación (Perú)</strong></td>
+                            <td>Bold Perú</td>
+                            <td>Operaciones Internacionales</td>
+                            <td class="monto">$4.200.000.000,00</td>
+                            <td><span class="status-ok">Cierre Diario</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tarjeta-dashboard" style="margin-top: 32px;">
+                <div class="cabecera-seccion">
+                    <a href="#" class="enlace-atras"><i class='bx bx-chevron-left'></i> Búsqueda</a>
+                    <h1 class="titulo-principal">Búsqueda avanzada de comercios</h1>
+                    <p class="descripcion">
+                        Ingresa los datos del comercio que estás buscando. Si necesitas exportar información detallada, dirígete a <a href="#" class="enlace-inline">Quicksight</a>.
+                    </p>
+                </div>
+
+                <form class="formulario-busqueda">
+                    <div class="campo">
+                        <label for="merchant-id">Merchant ID</label>
+                        <input type="text" id="merchant-id">
+                    </div>
+                    <div class="campo">
+                        <label for="tipo-doc">Tipo de documento</label>
+                        <select id="tipo-doc">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="estado-comercio">Estado del comercio</label>
+                        <select id="estado-comercio">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="no-doc">No. Documento</label>
+                        <input type="text" id="no-doc">
+                    </div>
+                    <div class="campo">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo">
+                    </div>
+                    <div class="campo">
+                        <label for="tipo-cliente">Tipo de cliente</label>
+                        <select id="tipo-cliente">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label>Fecha de creación</label>
+                        <div class="rango-fechas">
+                            <div><small>Desde</small><input type="text" placeholder="DD/MM/AAAA"></div>
+                            <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label for="verif-manual">Estado de verificación manual</label>
+                        <select id="verif-manual">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Fecha de última actualización</label>
+                        <div class="rango-fechas">
+                            <div><small>Desde</small><input type="text" placeholder="DD/MM/AAAA"></div>
+                            <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
+                        </div>
+                    </div>
+
+                    <div class="campo">
+                        <label for="categoria">Categoría</label>
+                        <select id="categoria">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="departamento">Departamento</label>
+                        <select id="departamento">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="subcategoria">Subcategoría</label>
+                        <select id="subcategoria">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="ciudad">Ciudad</label>
+                        <select id="ciudad">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Fecha de finalización del onboarding</label>
+                        <div class="rango-fechas">
+                            <div><small>Desde</small><input type="text" placeholder="DD/MM/AAAA"></div>
+                            <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label for="celular">Celular</label>
+                        <input type="tel" id="celular">
+                    </div>
+
+                    <div class="contenedor-boton">
+                        <button type="submit" class="btn-buscar">Buscar</button>
+                    </div>
+                </form>
             </div>
         </main>
-
     </div>
 
 </body>

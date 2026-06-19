@@ -4,8 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinOps Dashboard - Bold</title>
-    <link rel="stylesheet" href="estilos.css?v=5">
+    <link rel="stylesheet" href="estilos.css?v=7">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .fila-principal {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .fila-principal:hover {
+            background-color: #f8fafc !important;
+        }
+        .chevron-icon {
+            transition: transform 0.2s ease;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+            color: #001e62;
+        }
+        .fila-desglose {
+            background-color: #fdfefe;
+        }
+        .celda-anidada {
+            padding: 0 !important;
+            border-bottom: 2px solid #e2e8f0 !important;
+        }
+        .tabla-bancos-interna {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f8fafc;
+            animation: expandir 0.3s ease-out;
+        }
+        .tabla-bancos-interna th {
+            background-color: #edf2f7 !important;
+            color: #475569 !important;
+            font-size: 12px !important;
+            padding: 8px 16px !important;
+        }
+        .tabla-bancos-interna td {
+            padding: 10px 16px !important;
+            font-size: 13px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+        @keyframes expandir {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
@@ -38,7 +82,7 @@
                     <table class="tabla-saldos">
                         <thead>
                             <tr>
-                                <th>Entidad / Pestaña</th>
+                                <th>Entidad / Pestaña (Clic para abrir)</th>
                                 <th>Saldo Actual Consolidado</th>
                                 <th>Var. Día Ant. (D+1)</th>
                                 <th>Var. Semanal (D+7)</th>
@@ -49,7 +93,7 @@
                         </thead>
                         <tbody id="tabla-cuerpo-financiero">
                             <tr>
-                                <td colspan="7" style="text-align: center; color: #94a3b8;">Leyendo variables financieras en tiempo real...</td>
+                                <td colspan="7" style="text-align: center; color: #94a3b8;">Leyendo variables financieras...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -70,10 +114,9 @@
             return `<span style="color: ${color}; font-weight: 700;">${signo}${valor.toFixed(2)}%</span>`;
         };
 
-        // Extrae los datos reales procesados por tu Google Colab
         fetch('./financial_data.json')
             .then(response => {
-                if (!response.ok) throw new Error("Archivo JSON no encontrado");
+                if (!response.ok) throw new Error("JSON no encontrado");
                 return response.json();
             })
             .then(data => {
@@ -89,10 +132,16 @@
                 Object.keys(data).forEach(key => {
                     const empresa = data[key];
                     const nombreVisible = nombresEstructura[key] || key;
+                    const targetId = `desglose-${key}`;
 
-                    const fila = document.createElement('tr');
-                    fila.innerHTML = `
-                        <td><strong>${nombreVisible}</strong></td>
+                    // 1. Fila Principal Consolidada
+                    const filaPrincipal = document.createElement('tr');
+                    filaPrincipal.className = 'fila-principal';
+                    filaPrincipal.innerHTML = `
+                        <td>
+                            <i class='bx bx-chevron-right chevron-icon' id="icon-${key}" style="font-size: 18px;"></i>
+                            <strong>${nombreVisible}</strong>
+                        </td>
                         <td class="monto">${formatearMoneda(empresa.saldo_actual)}</td>
                         <td>${formatearPorcentaje(empresa.d_1_variacion)}</td>
                         <td>${formatearPorcentaje(empresa.d_7_variacion)}</td>
@@ -100,7 +149,63 @@
                         <td style="color: #b45309; font-weight: 600;">${formatearMoneda(empresa.min_30d)}</td>
                         <td style="color: #16a34a; font-weight: 600;">${formatearMoneda(empresa.max_30d)}</td>
                     `;
-                    tbody.appendChild(fila);
+                    tbody.appendChild(filaPrincipal);
+
+                    // 2. Fila Secundaria de Desglose Oculta
+                    const filaDesglose = document.createElement('tr');
+                    filaDesglose.id = targetId;
+                    filaDesglose.className = 'fila-desglose';
+                    filaDesglose.style.display = 'none';
+
+                    let tablaBancosHTML = `
+                        <td colspan="7" class="celda-anidada">
+                            <table class="tabla-bancos-interna">
+                                <thead>
+                                    <tr>
+                                        <th style="padding-left: 40px !important;">Cuenta / Banco Específico</th>
+                                        <th>Saldo Disponible</th>
+                                        <th>Var. Día Ant. ($)</th>
+                                        <th>Mínimo (Periodo)</th>
+                                        <th>Máximo (Periodo)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    if (empresa.bancos && empresa.bancos.length > 0) {
+                        empresa.bancos.forEach(banco => {
+                            const colorVar = banco.Var_D1 > 0 ? '#16a34a' : banco.Var_D1 < 0 ? '#dc2626' : '#0f172a';
+                            const signo = banco.Var_D1 > 0 ? '+' : '';
+                            tablaBancosHTML += `
+                                <tr>
+                                    <td style="padding-left: 40px !important; font-weight: 600; color: #475569;">${banco.Banco}</td>
+                                    <td class="monto" style="font-weight:600;">${formatearMoneda(banco["Saldo Actual"])}</td>
+                                    <td style="color: ${colorVar}; font-weight: 600;">${signo}${formatearMoneda(banco.Var_D1)}</td>
+                                    <td style="color: #64748b;">${formatearMoneda(banco.Min_Periodo)}</td>
+                                    <td style="color: #64748b;">${formatearMoneda(banco.Max_Periodo)}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">No se encontraron cuentas detalladas. Asegúrate de subir el JSON actualizado de Colab.</td></tr>`;
+                    }
+
+                    tablaBancosHTML += `</tbody></table></td>`;
+                    filaDesglose.innerHTML = tablaBancosHTML;
+                    tbody.appendChild(filaDesglose);
+
+                    // 3. Evento de Clic
+                    filaPrincipal.addEventListener('click', () => {
+                        const panel = document.getElementById(targetId);
+                        const icon = document.getElementById(`icon-${key}`);
+                        if (panel.style.display === 'none') {
+                            panel.style.display = 'table-row';
+                            icon.style.transform = 'rotate(90deg)';
+                        } else {
+                            panel.style.display = 'none';
+                            icon.style.transform = 'rotate(0deg)';
+                        }
+                    });
                 });
 
                 document.getElementById('fecha-actualizacion').innerText = "Variables OK";
@@ -108,14 +213,7 @@
                 document.getElementById('fecha-actualizacion').style.color = "#16a34a";
             })
             .catch(error => {
-                console.error("Error cargando el JSON:", error);
-                document.getElementById('tabla-cuerpo-financiero').innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: #dc2626; font-weight: 600; padding: 20px;">
-                            ⚠️ Error al enlazar 'financial_data.json'. Verifica que el análisis del Colab se haya ejecutado.
-                        </td>
-                    </tr>
-                `;
+                console.error("Error:", error);
             });
     </script>
 </body>

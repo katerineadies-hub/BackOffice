@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard FinOps - Bold</title>
-    <link rel="stylesheet" href="estilos.css">
+    <title>Dashboard Analítico - Bold</title>
+    <link rel="stylesheet" href="estilos.css?v=4">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
@@ -13,7 +13,6 @@
         
         <aside class="sidebar">
             <div class="logo">bold</div>
-            
             <nav class="menu-navegacion">
                 <div class="grupo-menu">
                     <span class="titulo-grupo">Cuentas del comercio</span>
@@ -21,14 +20,12 @@
                         <li><a href="#"><i class='bx bx-search-alt'></i> Buscar cuentas</a></li>
                     </ul>
                 </div>
-
                 <div class="grupo-menu">
                     <span class="titulo-grupo">Clientes</span>
                     <ul>
                         <li><a href="#"><i class='bx bx-search-alt'></i> Buscar clientes</a></li>
                     </ul>
                 </div>
-
                 <div class="grupo-menu">
                     <span class="titulo-grupo">Comercios</span>
                     <ul>
@@ -37,7 +34,6 @@
                         <li><a href="#"><i class='bx bx-devices'></i> Terminales</a></li>
                     </ul>
                 </div>
-
                 <div class="grupo-menu">
                     <span class="titulo-grupo">Pagos</span>
                     <ul>
@@ -53,86 +49,29 @@
             
             <div class="tarjeta-dashboard">
                 <div class="cabecera-tarjeta">
-                    <h2><i class='bx bx-trending-up'></i> Posición Financiera (Saldos de Bancos)</h2>
-                    <span class="badge-actualizado">Corte Control Diario</span>
+                    <h2><i class='bx bx-analytics'></i> Análisis Financiero Consolidado (Posición Real)</h2>
+                    <span class="badge-actualizado" id="fecha-actualizacion">Procesando JSON...</span>
                 </div>
-                
-                <table class="tabla-saldos">
-                    <thead>
-                        <tr>
-                            <th>Entidad Bancaria</th>
-                            <th>Entidad Operativa</th>
-                            <th>Tipo de Cuenta / Uso</th>
-                            <th>Saldo Disponible (COP)</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Banco de la República (CUD)</strong></td>
-                            <td>Bold CF</td>
-                            <td>Cuenta Depósito Principal</td>
-                            <td class="monto">$117.558.767.766,32</td>
-                            <td><span class="status-ok">Conciliado</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bancolombia</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Cuenta Corriente - Payouts</td>
-                            <td class="monto">$45.230.100.000,00</td>
-                            <td><span class="status-ok">Conciliado</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bancolombia</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Cuenta Ahorros (4755) - Fondeo</td>
-                            <td class="monto">$12.850.400.000,00</td>
-                            <td><span class="status-ok">Monitoreado</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Citibank (City)</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Cuenta Recaudo Opex (3021)</td>
-                            <td class="monto">$24.500.000.000,00</td>
-                            <td><span class="status-ok">Extracto Ok</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Davivienda</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Dispersión Alterna Payouts</td>
-                            <td class="monto">$15.320.000.000,00</td>
-                            <td><span class="status-ok">Conciliado</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>JP Morgan</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Monetizaciones / Divisas</td>
-                            <td class="monto">$32.110.000.000,00</td>
-                            <td><span class="status-ok">Operativo</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Credicorp Capital</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Fondo Inversión Colectiva (FIC)</td>
-                            <td class="monto">$58.420.000.000,00</td>
-                            <td><span class="status-ok">Rentabilidad</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Scotiabank Colpatria</strong></td>
-                            <td>Bold SAS</td>
-                            <td>Cuenta Recaudo Comercial</td>
-                            <td class="monto">$6.150.000.000,00</td>
-                            <td><span class="status-ok">Operativo</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Banco de la Nación (Perú)</strong></td>
-                            <td>Bold Perú</td>
-                            <td>Operaciones Internacionales</td>
-                            <td class="monto">$4.200.000.000,00</td>
-                            <td><span class="status-ok">Cierre Diario</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="tabla-contenedor">
+                    <table class="tabla-saldos">
+                        <thead>
+                            <tr>
+                                <th>Entidad / Pestaña</th>
+                                <th>Saldo Actual Consolidado</th>
+                                <th>Var. Día Ant. (D+1)</th>
+                                <th>Var. Semanal (D+7)</th>
+                                <th>Promedio (30d)</th>
+                                <th>Mínimo (30d)</th>
+                                <th>Máximo (30d)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-cuerpo-financiero">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #94a3b8;">Cargando variables financieras...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="tarjeta-dashboard" style="margin-top: 32px;">
@@ -151,17 +90,12 @@
                     </div>
                     <div class="campo">
                         <label for="tipo-doc">Tipo de documento</label>
-                        <select id="tipo-doc">
-                            <option value="">Seleccione</option>
-                        </select>
+                        <select id="tipo-doc"><option>Seleccione</option></select>
                     </div>
                     <div class="campo">
                         <label for="estado-comercio">Estado del comercio</label>
-                        <select id="estado-comercio">
-                            <option value="">Seleccione</option>
-                        </select>
+                        <select id="estado-comercio"><option>Seleccione</option></select>
                     </div>
-
                     <div class="campo">
                         <label for="no-doc">No. Documento</label>
                         <input type="text" id="no-doc">
@@ -172,11 +106,8 @@
                     </div>
                     <div class="campo">
                         <label for="tipo-cliente">Tipo de cliente</label>
-                        <select id="tipo-cliente">
-                            <option value="">Seleccione</option>
-                        </select>
+                        <select id="tipo-cliente"><option>Seleccione</option></select>
                     </div>
-
                     <div class="campo">
                         <label>Fecha de creación</label>
                         <div class="rango-fechas">
@@ -186,9 +117,7 @@
                     </div>
                     <div class="campo">
                         <label for="verif-manual">Estado de verificación manual</label>
-                        <select id="verif-manual">
-                            <option value="">Seleccione</option>
-                        </select>
+                        <select id="verif-manual"><option>Seleccione</option></select>
                     </div>
                     <div class="campo">
                         <label>Fecha de última actualización</label>
@@ -197,44 +126,6 @@
                             <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
                         </div>
                     </div>
-
-                    <div class="campo">
-                        <label for="categoria">Categoría</label>
-                        <select id="categoria">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label for="departamento">Departamento</label>
-                        <select id="departamento">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label for="subcategoria">Subcategoría</label>
-                        <select id="subcategoria">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-
-                    <div class="campo">
-                        <label for="ciudad">Ciudad</label>
-                        <select id="ciudad">
-                            <option value="">Seleccione</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label>Fecha de finalización del onboarding</label>
-                        <div class="rango-fechas">
-                            <div><small>Desde</small><input type="text" placeholder="DD/MM/AAAA"></div>
-                            <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
-                        </div>
-                    </div>
-                    <div class="campo">
-                        <label for="celular">Celular</label>
-                        <input type="tel" id="celular">
-                    </div>
-
                     <div class="contenedor-boton">
                         <button type="submit" class="btn-buscar">Buscar</button>
                     </div>
@@ -243,5 +134,69 @@
         </main>
     </div>
 
+    <script>
+        // Función para dar formato de dinero de forma limpia
+        const formatearMoneda = (valor) => {
+            return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 2 }).format(valor);
+        };
+
+        // Función para dar formato a los porcentajes de variación analítica
+        const formatearPorcentaje = (valor) => {
+            const signo = valor > 0 ? '+' : '';
+            const color = valor > 0 ? 'green' : valor < 0 ? 'red' : 'black';
+            return `<span style="color: ${color}; font-weight: 600;">${signo}${valor.toFixed(2)}%</span>`;
+        };
+
+        // Extraer los datos reales calculados por tu script de Colab
+        fetch('./financial_data.json')
+            .then(response => {
+                if (!response.ok) throw new Error("No se encontró el archivo financial_data.json");
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.getElementById('tabla-cuerpo-financiero');
+                tbody.innerHTML = ''; // Limpiar mensaje de carga
+
+                // Mapeo amigable de los IDs generados por tu motor de Python
+                const nombresEstructura = {
+                    "Bold_CF": "Bold CF (Monitoreo CUD)",
+                    "Bold_SAS": "Bold CO SAS (Operación)",
+                    "Bold_Peru": "Bold Perú (Internacional)"
+                };
+
+                // Recorrer los bloques analíticos de tu JSON
+                Object.keys(data).forEach(key => {
+                    const empresa = data[key];
+                    const nombreVisible = nombresEstructura[key] || key;
+
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td><strong>${nombreVisible}</strong></td>
+                        <td class="monto">${formatearMoneda(empresa.saldo_actual)}</td>
+                        <td>${formatearPorcentaje(empresa.d_1_variacion)}</td>
+                        <td>${formatearPorcentaje(empresa.d_7_variacion)}</td>
+                        <td style="color: #64748b;">${formatearMoneda(empresa.promedio_30d)}</td>
+                        <td style="color: #b45309; font-weight: 500;">${formatearMoneda(empresa.min_30d)}</td>
+                        <td style="color: #15803d; font-weight: 500;">${formatearMoneda(empresa.max_30d)}</td>
+                    `;
+                    tbody.appendChild(fila);
+                });
+
+                // Cambiar el badge de estado a completado
+                document.getElementById('fecha-actualizacion').innerText = "Variables en Línea";
+                document.getElementById('fecha-actualizacion').style.backgroundColor = "#dcfce7";
+                document.getElementById('fecha-actualizacion').style.color = "#15803d";
+            })
+            .catch(error => {
+                console.error("Error cargando el pipeline financiero:", error);
+                document.getElementById('tabla-cuerpo-financiero').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: red; font-weight: 600;">
+                            ⚠️ Error al enlazar 'financial_data.json'. Ejecuta tu Colab para actualizar el archivo.
+                        </td>
+                    </tr>
+                `;
+            });
+    </script>
 </body>
 </html>

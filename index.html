@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinOps Dashboard - Bold</title>
-    <link rel="stylesheet" href="estilos.css?v=7">
+    <link rel="stylesheet" href="estilos.css?v=8">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         .fila-principal {
@@ -93,7 +93,9 @@
                         </thead>
                         <tbody id="tabla-cuerpo-financiero">
                             <tr>
-                                <td colspan="7" style="text-align: center; color: #94a3b8;">Leyendo variables financieras...</td>
+                                <td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">
+                                    Leyendo variables financieras de forma segura...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -104,24 +106,29 @@
     </div>
 
     <script>
+        // Formateador de moneda blindado contra valores nulos o indefinidos
         const formatearMoneda = (valor) => {
+            if (valor === undefined || valor === null || isNaN(valor)) return '$ 0,00';
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 2 }).format(valor);
         };
 
+        // Formateador de porcentaje blindado contra valores nulos o indefinidos
         const formatearPorcentaje = (valor) => {
-            const signo = valor > 0 ? '+' : '';
-            const color = valor > 0 ? '#16a34a' : valor < 0 ? '#dc2626' : '#0f172a';
-            return `<span style="color: ${color}; font-weight: 700;">${signo}${valor.toFixed(2)}%</span>`;
+            if (valor === undefined || valor === null || isNaN(valor)) return '0.00%';
+            const num = Number(valor);
+            const signo = num > 0 ? '+' : '';
+            const color = num > 0 ? '#16a34a' : num < 0 ? '#dc2626' : '#0f172a';
+            return `<span style="color: ${color}; font-weight: 700;">${signo}${num.toFixed(2)}%</span>`;
         };
 
         fetch('./financial_data.json')
             .then(response => {
-                if (!response.ok) throw new Error("JSON no encontrado");
+                if (!response.ok) throw new Error("No se pudo leer el archivo financial_data.json en el repositorio.");
                 return response.json();
             })
             .then(data => {
                 const tbody = document.getElementById('tabla-cuerpo-financiero');
-                tbody.innerHTML = ''; 
+                tbody.innerHTML = ''; // Limpiar mensaje de carga de forma segura
 
                 const nombresEstructura = {
                     "Bold_CF": "Bold CF (Monitoreo CUD)",
@@ -129,12 +136,18 @@
                     "Bold_Peru": "Bold Perú (Internacional)"
                 };
 
-                Object.keys(data).forEach(key => {
-                    const empresa = data[key];
+                // Asegurar que 'data' sea un objeto válido antes de extraer las llaves
+                const llaves = Object.keys(data || {});
+                if (llaves.length === 0) {
+                    throw new Error("El archivo JSON se leyó correctamente pero está vacío o no contiene compañías.");
+                }
+
+                llaves.forEach(key => {
+                    const empresa = data[key] || {};
                     const nombreVisible = nombresEstructura[key] || key;
                     const targetId = `desglose-${key}`;
 
-                    // 1. Fila Principal Consolidada
+                    // 1. Fila Principal Consolidada (Usa caídas seguras con '|| 0')
                     const filaPrincipal = document.createElement('tr');
                     filaPrincipal.className = 'fila-principal';
                     filaPrincipal.innerHTML = `
@@ -172,29 +185,30 @@
                                 <tbody>
                     `;
 
-                    if (empresa.bancos && empresa.bancos.length > 0) {
+                    if (empresa.bancos && Array.isArray(empresa.bancos) && empresa.bancos.length > 0) {
                         empresa.bancos.forEach(banco => {
-                            const colorVar = banco.Var_D1 > 0 ? '#16a34a' : banco.Var_D1 < 0 ? '#dc2626' : '#0f172a';
-                            const signo = banco.Var_D1 > 0 ? '+' : '';
+                            const v1 = banco.Var_D1 || 0;
+                            const colorVar = v1 > 0 ? '#16a34a' : v1 < 0 ? '#dc2626' : '#0f172a';
+                            const signo = v1 > 0 ? '+' : '';
                             tablaBancosHTML += `
                                 <tr>
-                                    <td style="padding-left: 40px !important; font-weight: 600; color: #475569;">${banco.Banco}</td>
+                                    <td style="padding-left: 40px !important; font-weight: 600; color: #475569;">${banco.Banco || 'Cuenta Desconocida'}</td>
                                     <td class="monto" style="font-weight:600;">${formatearMoneda(banco["Saldo Actual"])}</td>
-                                    <td style="color: ${colorVar}; font-weight: 600;">${signo}${formatearMoneda(banco.Var_D1)}</td>
+                                    <td style="color: ${colorVar}; font-weight: 600;">${signo}${formatearMoneda(v1)}</td>
                                     <td style="color: #64748b;">${formatearMoneda(banco.Min_Periodo)}</td>
                                     <td style="color: #64748b;">${formatearMoneda(banco.Max_Periodo)}</td>
                                 </tr>
                             `;
                         });
                     } else {
-                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">No se encontraron cuentas detalladas. Asegúrate de subir el JSON actualizado de Colab.</td></tr>`;
+                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 12px;">No se encontraron subcuentas detalladas en este corte. Revisa la exportación de Colab.</td></tr>`;
                     }
 
                     tablaBancosHTML += `</tbody></table></td>`;
                     filaDesglose.innerHTML = tablaBancosHTML;
                     tbody.appendChild(filaDesglose);
 
-                    // 3. Evento de Clic
+                    // 3. Evento de Clic con rotación de flecha
                     filaPrincipal.addEventListener('click', () => {
                         const panel = document.getElementById(targetId);
                         const icon = document.getElementById(`icon-${key}`);
@@ -208,12 +222,30 @@
                     });
                 });
 
+                // Cambiar estado del badge a exitoso
                 document.getElementById('fecha-actualizacion').innerText = "Variables OK";
                 document.getElementById('fecha-actualizacion').style.backgroundColor = "#dcfce7";
                 document.getElementById('fecha-actualizacion').style.color = "#16a34a";
             })
             .catch(error => {
-                console.error("Error:", error);
+                console.error("Error en Pipeline:", error);
+                const tbody = document.getElementById('tabla-cuerpo-financiero');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #dc2626; font-weight: 600; padding: 24px; line-height: 1.6;">
+                            ⚠️ Error detectado: ${error.message}<br>
+                            <span style="color: #475569; font-weight: 400; font-size: 13px;">
+                                Solución: Asegúrate de ejecutar tu Colab completo con el nuevo código, descargar 'financial_data.json' y subirlo a GitHub.
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                
+                // Forzar visualización de error en el botón de estado
+                const badge = document.getElementById('fecha-actualizacion');
+                badge.innerText = "Error Sincro";
+                badge.style.backgroundColor = "#fee2e2";
+                badge.style.color = "#dc2626";
             });
     </script>
 </body>

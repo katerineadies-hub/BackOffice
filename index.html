@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Analítico - Bold</title>
-    <link rel="stylesheet" href="estilos.css?v=4">
+    <title>FinOps Dashboard - Bold</title>
+    <link rel="stylesheet" href="estilos.css?v=5">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
@@ -15,31 +15,13 @@
             <div class="logo">bold</div>
             <nav class="menu-navegacion">
                 <div class="grupo-menu">
-                    <span class="titulo-grupo">Cuentas del comercio</span>
+                    <span class="titulo-grupo">Módulos Financieros</span>
                     <ul>
-                        <li><a href="#"><i class='bx bx-search-alt'></i> Buscar cuentas</a></li>
-                    </ul>
-                </div>
-                <div class="grupo-menu">
-                    <span class="titulo-grupo">Clientes</span>
-                    <ul>
-                        <li><a href="#"><i class='bx bx-search-alt'></i> Buscar clientes</a></li>
-                    </ul>
-                </div>
-                <div class="grupo-menu">
-                    <span class="titulo-grupo">Comercios</span>
-                    <ul>
-                        <li class="activo"><a href="#"><i class='bx bx-search-alt'></i> Búsqueda</a></li>
-                        <li><a href="#"><i class='bx bx-credit-card-front'></i> Payouts</a></li>
-                        <li><a href="#"><i class='bx bx-devices'></i> Terminales</a></li>
-                    </ul>
-                </div>
-                <div class="grupo-menu">
-                    <span class="titulo-grupo">Pagos</span>
-                    <ul>
-                        <li><a href="#"><i class='bx bx-dollar-circle'></i> Transacciones</a></li>
-                        <li><a href="#"><i class='bx bx-shield-quarter'></i> Disputas</a></li>
-                        <li><a href="#"><i class='bx bx-refresh'></i> Contracargos</a></li>
+                        <li class="activo"><a href="#"><i class='bx bx-bar-chart-square'></i> Financial Position</a></li>
+                        <li class="activo"><a href="#"><i class='bx bx-shield-quarter'></i> Monitoreo CUD</a></li>
+                        <li><a href="#"><i class='bx bx-check-shield'></i> Políticas de Aprobación</a></li>
+                        <li><a href="#"><i class='bx bx-git-compare'></i> Conciliaciones</a></li>
+                        <li><a href="#"><i class='bx bx-line-chart'></i> Flujo de Caja</a></li>
                     </ul>
                 </div>
             </nav>
@@ -49,8 +31,8 @@
             
             <div class="tarjeta-dashboard">
                 <div class="cabecera-tarjeta">
-                    <h2><i class='bx bx-analytics'></i> Análisis Financiero Consolidado (Posición Real)</h2>
-                    <span class="badge-actualizado" id="fecha-actualizacion">Procesando JSON...</span>
+                    <h2><i class='bx bx-analytics'></i> Posición Financiera y Control de Saldos Bancarios</h2>
+                    <span class="badge-actualizado" id="fecha-actualizacion">Conectando Pipeline...</span>
                 </div>
                 <div class="tabla-contenedor">
                     <table class="tabla-saldos">
@@ -67,104 +49,43 @@
                         </thead>
                         <tbody id="tabla-cuerpo-financiero">
                             <tr>
-                                <td colspan="7" style="text-align: center; color: #94a3b8;">Cargando variables financieras...</td>
+                                <td colspan="7" style="text-align: center; color: #94a3b8;">Leyendo variables financieras en tiempo real...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="tarjeta-dashboard" style="margin-top: 32px;">
-                <div class="cabecera-seccion">
-                    <a href="#" class="enlace-atras"><i class='bx bx-chevron-left'></i> Búsqueda</a>
-                    <h1 class="titulo-principal">Búsqueda avanzada de comercios</h1>
-                    <p class="descripcion">
-                        Ingresa los datos del comercio que estás buscando. Si necesitas exportar información detallada, dirígete a <a href="#" class="enlace-inline">Quicksight</a>.
-                    </p>
-                </div>
-
-                <form class="formulario-busqueda">
-                    <div class="campo">
-                        <label for="merchant-id">Merchant ID</label>
-                        <input type="text" id="merchant-id">
-                    </div>
-                    <div class="campo">
-                        <label for="tipo-doc">Tipo de documento</label>
-                        <select id="tipo-doc"><option>Seleccione</option></select>
-                    </div>
-                    <div class="campo">
-                        <label for="estado-comercio">Estado del comercio</label>
-                        <select id="estado-comercio"><option>Seleccione</option></select>
-                    </div>
-                    <div class="campo">
-                        <label for="no-doc">No. Documento</label>
-                        <input type="text" id="no-doc">
-                    </div>
-                    <div class="campo">
-                        <label for="correo">Correo electrónico</label>
-                        <input type="email" id="correo">
-                    </div>
-                    <div class="campo">
-                        <label for="tipo-cliente">Tipo de cliente</label>
-                        <select id="tipo-cliente"><option>Seleccione</option></select>
-                    </div>
-                    <div class="campo">
-                        <label>Fecha de creación</label>
-                        <div class="rango-fechas">
-                            <div><small>Desde</small><input type="text" placeholder="DD/MM/AAAA"></div>
-                            <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
-                        </div>
-                    </div>
-                    <div class="campo">
-                        <label for="verif-manual">Estado de verificación manual</label>
-                        <select id="verif-manual"><option>Seleccione</option></select>
-                    </div>
-                    <div class="campo">
-                        <label>Fecha de última actualización</label>
-                        <div class="rango-fechas">
-                            <div><small>Desde</small><input type="text" placeholder="DD/MM/AAAA"></div>
-                            <div><small>Hasta</small><input type="text" placeholder="DD/MM/AAAA"></div>
-                        </div>
-                    </div>
-                    <div class="contenedor-boton">
-                        <button type="submit" class="btn-buscar">Buscar</button>
-                    </div>
-                </form>
-            </div>
         </main>
     </div>
 
     <script>
-        // Función para dar formato de dinero de forma limpia
         const formatearMoneda = (valor) => {
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 2 }).format(valor);
         };
 
-        // Función para dar formato a los porcentajes de variación analítica
         const formatearPorcentaje = (valor) => {
             const signo = valor > 0 ? '+' : '';
-            const color = valor > 0 ? 'green' : valor < 0 ? 'red' : 'black';
-            return `<span style="color: ${color}; font-weight: 600;">${signo}${valor.toFixed(2)}%</span>`;
+            const color = valor > 0 ? '#16a34a' : valor < 0 ? '#dc2626' : '#0f172a';
+            return `<span style="color: ${color}; font-weight: 700;">${signo}${valor.toFixed(2)}%</span>`;
         };
 
-        // Extraer los datos reales calculados por tu script de Colab
+        // Extrae los datos reales procesados por tu Google Colab
         fetch('./financial_data.json')
             .then(response => {
-                if (!response.ok) throw new Error("No se encontró el archivo financial_data.json");
+                if (!response.ok) throw new Error("Archivo JSON no encontrado");
                 return response.json();
             })
             .then(data => {
                 const tbody = document.getElementById('tabla-cuerpo-financiero');
-                tbody.innerHTML = ''; // Limpiar mensaje de carga
+                tbody.innerHTML = ''; 
 
-                // Mapeo amigable de los IDs generados por tu motor de Python
                 const nombresEstructura = {
                     "Bold_CF": "Bold CF (Monitoreo CUD)",
                     "Bold_SAS": "Bold CO SAS (Operación)",
                     "Bold_Peru": "Bold Perú (Internacional)"
                 };
 
-                // Recorrer los bloques analíticos de tu JSON
                 Object.keys(data).forEach(key => {
                     const empresa = data[key];
                     const nombreVisible = nombresEstructura[key] || key;
@@ -175,24 +96,23 @@
                         <td class="monto">${formatearMoneda(empresa.saldo_actual)}</td>
                         <td>${formatearPorcentaje(empresa.d_1_variacion)}</td>
                         <td>${formatearPorcentaje(empresa.d_7_variacion)}</td>
-                        <td style="color: #64748b;">${formatearMoneda(empresa.promedio_30d)}</td>
-                        <td style="color: #b45309; font-weight: 500;">${formatearMoneda(empresa.min_30d)}</td>
-                        <td style="color: #15803d; font-weight: 500;">${formatearMoneda(empresa.max_30d)}</td>
+                        <td style="color: #475569;">${formatearMoneda(empresa.promedio_30d)}</td>
+                        <td style="color: #b45309; font-weight: 600;">${formatearMoneda(empresa.min_30d)}</td>
+                        <td style="color: #16a34a; font-weight: 600;">${formatearMoneda(empresa.max_30d)}</td>
                     `;
                     tbody.appendChild(fila);
                 });
 
-                // Cambiar el badge de estado a completado
-                document.getElementById('fecha-actualizacion').innerText = "Variables en Línea";
+                document.getElementById('fecha-actualizacion').innerText = "Variables OK";
                 document.getElementById('fecha-actualizacion').style.backgroundColor = "#dcfce7";
-                document.getElementById('fecha-actualizacion').style.color = "#15803d";
+                document.getElementById('fecha-actualizacion').style.color = "#16a34a";
             })
             .catch(error => {
-                console.error("Error cargando el pipeline financiero:", error);
+                console.error("Error cargando el JSON:", error);
                 document.getElementById('tabla-cuerpo-financiero').innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; color: red; font-weight: 600;">
-                            ⚠️ Error al enlazar 'financial_data.json'. Ejecuta tu Colab para actualizar el archivo.
+                        <td colspan="7" style="text-align: center; color: #dc2626; font-weight: 600; padding: 20px;">
+                            ⚠️ Error al enlazar 'financial_data.json'. Verifica que el análisis del Colab se haya ejecutado.
                         </td>
                     </tr>
                 `;

@@ -1,11 +1,11 @@
 {
     "Bold_CF": {
-        "saldo_actual": 244571248904.46005,
+        "saldo_actual": 263161901277.26004,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
-                "saldo": 198081873395.37,
-                "variacion": -3.9525548893482005
+                "saldo": 216672743690.43,
+                "variacion": 9.385447530553567
             },
             {
                 "nombre": "Adquirencia TAPI",
@@ -71,11 +71,6 @@
                 "nombre": "JP Morgan USD",
                 "saldo": 386212.69,
                 "variacion": 38.33655719991078
-            },
-            {
-                "nombre": "Adquirencia VISA I",
-                "saldo": 217922.26,
-                "variacion": -8.022804131586968
             }
         ]
     },

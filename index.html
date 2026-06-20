@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinOps Dashboard - Bold</title>
-    <link rel="stylesheet" href="estilos.css?v=9">
+    <link rel="stylesheet" href="estilos.css?v=10">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         .fila-principal {
@@ -76,7 +76,7 @@
             <div class="tarjeta-dashboard">
                 <div class="cabecera-tarjeta">
                     <h2><i class='bx bx-analytics'></i> Posición Financiera y Control de Saldos Bancarios</h2>
-                    <span class="badge-actualizado" id="fecha-actualizacion">Conectando Pipeline...</span>
+                    <span class="badge-actualizado" id="fecha-actualizacion">Cargando Datos...</span>
                 </div>
                 <div class="tabla-contenedor">
                     <table class="tabla-saldos">
@@ -94,7 +94,7 @@
                         <tbody id="tabla-cuerpo-financiero">
                             <tr>
                                 <td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">
-                                    Leyendo variables financieras...
+                                    Sincronizando información financiera consolidada...
                                 </td>
                             </tr>
                         </tbody>
@@ -121,7 +121,7 @@
 
         fetch('./financial_data.json')
             .then(response => {
-                if (!response.ok) throw new Error("No se pudo leer el archivo JSON.");
+                if (!response.ok) throw new Error("No se pudo leer el archivo financial_data.json");
                 return response.json();
             })
             .then(data => {
@@ -139,20 +139,15 @@
                     const nombreVisible = nombresEstructura[key] || key;
                     const targetId = `desglose-${key}`;
 
-                    // --- MOTOR INTELIGENTE: DETECCIÓN DE LLAVES DE LA COMPAÑÍA ---
-                    let saldoActual = 0, varDia = 0, varSemana = 0, promedio30 = 0, minimo30 = 0, maximo30 = 0;
-                    
-                    for (let k in empresa) {
-                        let kLower = k.toLowerCase();
-                        if (kLower.includes("actual") || kLower.includes("saldo_actual")) saldoActual = empresa[k];
-                        if (kLower.includes("d_1") || kLower.includes("d+1") || kLower.includes("dia")) varDia = empresa[k];
-                        if (kLower.includes("d_7") || kLower.includes("d+7") || kLower.includes("semana")) varSemana = empresa[k];
-                        if (kLower.includes("promedio") || kLower.includes("30d") && kLower.includes("mean") || kLower.includes("prom")) promedio30 = empresa[k];
-                        if (kLower.includes("min")) minimo30 = empresa[k];
-                        if (kLower.includes("max")) maximo30 = empresa[k];
-                    }
+                    // MAPEO EXPLÍCITO DE COMPAÑÍA (Bypasa errores de minúsculas/mayúsculas del JSON)
+                    const saldoActual = empresa.saldo_actual ?? 0;
+                    const varDia = empresa.d_1_variacion ?? 0;
+                    const varSemana = empresa.d_7_variacion ?? 0;
+                    const promedio30 = empresa.promedio_30d ?? 0;
+                    const minimo30 = empresa.min_30d ?? 0;
+                    const maximo30 = empresa.max_30d ?? 0;
 
-                    // 1. Renderizar Fila Principal Consolidada
+                    // 1. Inyectar Fila Principal Consolidada con sus datos reales devueltos
                     const filaPrincipal = document.createElement('tr');
                     filaPrincipal.className = 'fila-principal';
                     filaPrincipal.innerHTML = `
@@ -169,7 +164,7 @@
                     `;
                     tbody.appendChild(filaPrincipal);
 
-                    // 2. Renderizar Fila de Desglose Oculta
+                    // 2. Inyectar Fila Secundaria de Desglose Oculta
                     const filaDesglose = document.createElement('tr');
                     filaDesglose.id = targetId;
                     filaDesglose.className = 'fila-desglose';
@@ -193,21 +188,12 @@
                     if (empresa.bancos && Array.isArray(empresa.bancos) && empresa.bancos.length > 0) {
                         empresa.bancos.forEach(banco => {
                             
-                            // --- MOTOR INTELIGENTE: DETECCIÓN DE LLAVES DE BANCOS INDIVIDUALES ---
-                            let nombreBanco = "Cuenta / Banco", saldoBanco = 0, varBanco = 0, minBanco = 0, maxBanco = 0;
-                            
-                            if (typeof banco === 'string') {
-                                nombreBanco = banco;
-                            } else if (banco && typeof banco === 'object') {
-                                for (let k in banco) {
-                                    let kLower = k.toLowerCase();
-                                    if (kLower.includes("banco") || kLower.includes("cuenta")) nombreBanco = banco[k];
-                                    if (kLower.includes("actual") || kLower.includes("saldo")) saldoBanco = banco[k];
-                                    if (kLower.includes("var") || kLower.includes("d+1") || kLower.includes("d1")) varBanco = banco[k];
-                                    if (kLower.includes("min")) minBanco = banco[k];
-                                    if (kLower.includes("max")) maxBanco = banco[k];
-                                }
-                            }
+                            // MAPEO EXPLÍCITO PARA LAS CUENTAS INDIVIDUALES
+                            const nombreBanco = banco.Banco ?? banco["Banco"] ?? "Cuenta / Banco";
+                            const saldoBanco = banco["Saldo Actual"] ?? banco.saldo_actual ?? 0;
+                            const varBanco = banco.Var_D1 ?? banco["Var. D+1 ($)"] ?? 0;
+                            const minBanco = banco.Min_Periodo ?? banco["Min (Periodo)"] ?? 0;
+                            const maxBanco = banco.Max_Periodo ?? banco["Max (Periodo)"] ?? 0;
 
                             const colorVar = varBanco > 0 ? '#16a34a' : varBanco < 0 ? '#dc2626' : '#0f172a';
                             const signo = varBanco > 0 ? '+' : '';
@@ -217,13 +203,13 @@
                                     <td style="padding-left: 40px !important; font-weight: 600; color: #475569;">${nombreBanco}</td>
                                     <td class="monto" style="font-weight:600;">${formatearMoneda(saldoBanco)}</td>
                                     <td style="color: ${colorVar}; font-weight: 600;">${varBanco !== 0 ? signo : ''}${formatearMoneda(varBanco)}</td>
-                                    <td style="color: #64748b;">${formatearMoneda(minBanco)}</td>
-                                    <td style="color: #64748b;">${formatearMoneda(maxBanco)}</td>
+                                    <td style="color: #475569;">${formatearMoneda(minBanco)}</td>
+                                    <td style="color: #475569;">${formatearMoneda(maxBanco)}</td>
                                 </tr>
                             `;
                         });
                     } else {
-                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 12px;">No se encontraron subcuentas detalladas.</td></tr>`;
+                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 14px;">No se encontraron subcuentas detalladas en este corte.</td></tr>`;
                     }
 
                     tablaBancosHTML += `</tbody></table></td>`;
@@ -249,7 +235,10 @@
                 document.getElementById('fecha-actualizacion').style.color = "#16a34a";
             })
             .catch(error => {
-                console.error("Error:", error);
+                console.error("Error cargando el pipeline:", error);
+                document.getElementById('fecha-actualizacion').innerText = "Error JSON";
+                document.getElementById('fecha-actualizacion').style.backgroundColor = "#fee2e2";
+                document.getElementById('fecha-actualizacion').style.color = "#dc2626";
             });
     </script>
 </body>

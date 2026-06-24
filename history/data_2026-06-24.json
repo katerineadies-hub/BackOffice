@@ -1,0 +1,307 @@
+{
+    "Bold_CF": {
+        "saldo_actual": 287626391260.16,
+        "bancos": [
+            {
+                "nombre": "Banco Rep\u00fablica (CUD)",
+                "saldo": 242757360354.6,
+                "variacion": 10.711665145917575
+            },
+            {
+                "nombre": "Adquirencia TAPI",
+                "saldo": 14714158542.52,
+                "variacion": -73.50276085080402
+            },
+            {
+                "nombre": "Adquirencia VISA D",
+                "saldo": 10387423954.74,
+                "variacion": -71.33094566761932
+            },
+            {
+                "nombre": "CredicorpCapital Bold CF",
+                "saldo": 7174633509.31,
+                "variacion": 0.04673595986286762
+            },
+            {
+                "nombre": "Bancolombia",
+                "saldo": 5488303357.95,
+                "variacion": -3.437122308414388
+            },
+            {
+                "nombre": "Adquirencia MCCA",
+                "saldo": 2001143658.78,
+                "variacion": -65.4899465486932
+            },
+            {
+                "nombre": "Bogot\u00e1",
+                "saldo": 1770625686.0,
+                "variacion": 6.901998162380947
+            },
+            {
+                "nombre": "Emisi\u00f3n MCCA",
+                "saldo": 1017080971.91,
+                "variacion": -62.897069206188384
+            },
+            {
+                "nombre": "Entrecuentas RBM",
+                "saldo": 941699195.0,
+                "variacion": -67.50715855656809
+            },
+            {
+                "nombre": "Bold CF 9539",
+                "saldo": 713980797.8,
+                "variacion": -0.014635786308119344
+            },
+            {
+                "nombre": "Citibank 3021",
+                "saldo": 513583332.98,
+                "variacion": -51.16947526496172
+            },
+            {
+                "nombre": "Efecty",
+                "saldo": 145159043.0,
+                "variacion": -10.705451087373454
+            },
+            {
+                "nombre": "JP Morgan USD",
+                "saldo": 616374.81,
+                "variacion": 20.52219882224039
+            },
+            {
+                "nombre": "Bold CF 2157",
+                "saldo": 419799.23,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "Adquirencia VISA I",
+                "saldo": 202681.53,
+                "variacion": -65.0125067950885
+            }
+        ]
+    },
+    "Bold_SAS": {
+        "saldo_actual": 15631063816.170002,
+        "bancos": [
+            {
+                "nombre": "Bold CF 4070",
+                "saldo": 4450036258.25,
+                "variacion": 268.6896671387755
+            },
+            {
+                "nombre": "Bold CF 4755",
+                "saldo": 2390767393.36,
+                "variacion": -64.36914448085913
+            },
+            {
+                "nombre": "Bancolombia 0126",
+                "saldo": 2104921469.8,
+                "variacion": -34.21237926549692
+            },
+            {
+                "nombre": "Bancolombia 9802",
+                "saldo": 1863566163.54,
+                "variacion": 274.09279050069074
+            },
+            {
+                "nombre": "Bancolombia 5928",
+                "saldo": 1164880569.04,
+                "variacion": 86.34102211759898
+            },
+            {
+                "nombre": "ScotiaBank",
+                "saldo": 1045268077.69,
+                "variacion": 71.76464986528639
+            },
+            {
+                "nombre": "Bold CF3016",
+                "saldo": 981724369.41,
+                "variacion": -13.325671571753455
+            },
+            {
+                "nombre": "CredicorpCapital Agregadora",
+                "saldo": 614720176.44,
+                "variacion": 859.8730547388099
+            },
+            {
+                "nombre": "Davivienda",
+                "saldo": 355651759.06,
+                "variacion": -94.23124500498854
+            },
+            {
+                "nombre": "Bold CF 9183",
+                "saldo": 350541546.82,
+                "variacion": 33.10923422444256
+            },
+            {
+                "nombre": "CredicorpCapital  Operativa",
+                "saldo": 112775270.51,
+                "variacion": 1.241614104614724
+            },
+            {
+                "nombre": "Corredores Davivienda",
+                "saldo": 93049882.86,
+                "variacion": -88.11133459374112
+            },
+            {
+                "nombre": "Citibank",
+                "saldo": 56832918.28,
+                "variacion": 58.63326500327201
+            },
+            {
+                "nombre": "N\u00f3mina SAS 0586",
+                "saldo": 40840975.33,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "N\u00f3mina CP 5296",
+                "saldo": 5486985.78,
+                "variacion": 0.0
+            }
+        ]
+    },
+    "Bold_Peru": {
+        "saldo_actual": 6717206.329999999,
+        "bancos": [
+            {
+                "nombre": "BCP MN 191-8740048-0-11 Soles",
+                "saldo": 5940397.17,
+                "variacion": 6.699620718806572
+            },
+            {
+                "nombre": "BCP MN 194-2451630-0-38 Soles",
+                "saldo": 444539.62,
+                "variacion": 8.44333333341464
+            },
+            {
+                "nombre": "BCP ME: 194-2454542-1-62 USD",
+                "saldo": 241987.42,
+                "variacion": -8.160730416705537
+            },
+            {
+                "nombre": "BCP MN 194-2473891-0-96 Soles",
+                "saldo": 41005.79,
+                "variacion": 1.8404440212453947
+            },
+            {
+                "nombre": "BCP MN 191-9409795-0-32 Soles",
+                "saldo": 18998.97,
+                "variacion": 2.0680099903137705
+            },
+            {
+                "nombre": "BBVA MN 0100072003 Soles",
+                "saldo": 17131.18,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "BCP MN 1919914041027 Soles",
+                "saldo": 8434.8,
+                "variacion": 0.6923885015757808
+            },
+            {
+                "nombre": "BCP MN 191-9410871-0-01 Soles",
+                "saldo": 2332.39,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "BCP MN 191-8591606-0-96 Soles",
+                "saldo": 1481.82,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "BCP MN 191-8591607-0-06 Soles",
+                "saldo": 440.13,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "BN VM 00-003-234045 Soles",
+                "saldo": 233.0,
+                "variacion": 0.0
+            },
+            {
+                "nombre": "BCP MN 191-8591608-0-16 Soles",
+                "saldo": 224.04,
+                "variacion": 0.0
+            }
+        ]
+    },
+    "CUD": {
+        "saldo_actual": 25881557067.870003,
+        "entradas_hoy": 54650106379.29,
+        "salidas_hoy": 28768549311.42,
+        "fecha_actualizacion": "2026-05-22",
+        "historial": [
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "  ",
+                "entradas": 24686588379.29,
+                "salidas": 0.0
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "D\u00e9bito para Pago CICLO 1 ACH de la entidad Bold. Compa\u00f1\u00eda de Financiamiento S.A",
+                "entradas": 0.0,
+                "salidas": 20635274456.18
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "2026052291829445LIQ Bold Compania de Fin MCCA",
+                "entradas": 0.0,
+                "salidas": 14920079.5
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "2026052291829446LIQ Bold Compania de Fin MCCA",
+                "entradas": 0.0,
+                "salidas": 1033092455.69
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "Comp SVB 210526",
+                "entradas": 0.0,
+                "salidas": 9966404.0
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "SERVICIO LIQUIDACI\u00c3?N TARIFA TRANSACCIONAL - VALOR: 38900 + IVA: 7391",
+                "entradas": 0.0,
+                "salidas": 46291.0
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "GMF",
+                "entradas": 0.0,
+                "salidas": 185.16
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "D\u00e9bito para Pago CICLO 2 ACH de la entidad Bold. Compa\u00f1\u00eda de Financiamiento S.A",
+                "entradas": 0.0,
+                "salidas": 4686879747.79
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "TRANSLADO DE FONDOS POR BOLD.CO SAS COL CUENTA 0090923021",
+                "entradas": 27000000000.0,
+                "salidas": 0.0
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "P2P COMPENSACION REDEBAN ENTRE CUENTAS\n",
+                "entradas": 2390000.0,
+                "salidas": 0.0
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "BOLD COMPA\u00d1IA DE FINANCIAMIENTO SA NIT 901522349-3\n",
+                "entradas": 2961128000.0,
+                "salidas": 0.0
+            },
+            {
+                "fecha": "2026-05-22 00:00:00",
+                "concepto": "D\u00e9bito para Pago CICLO 3 ACH de la entidad Bold. Compa\u00f1\u00eda de Financiamiento S.A",
+                "entradas": 0.0,
+                "salidas": 2388369692.1
+            }
+        ]
+    }
+}

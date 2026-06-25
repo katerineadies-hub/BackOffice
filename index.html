@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinOps Dashboard - Bold</title>
-    <link rel="stylesheet" href="estilos.css?v=10">
+    <link rel="stylesheet" href="estilos.css?v=11">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         .fila-principal {
@@ -76,7 +76,7 @@
             <div class="tarjeta-dashboard">
                 <div class="cabecera-tarjeta">
                     <h2><i class='bx bx-analytics'></i> Posición Financiera y Control de Saldos Bancarios</h2>
-                    <span class="badge-actualizado" id="fecha-actualizacion">Cargando Datos...</span>
+                    <span class="badge-actualizado" id="fecha-actualizacion">Sincronizando...</span>
                 </div>
                 <div class="tabla-contenedor">
                     <table class="tabla-saldos">
@@ -94,7 +94,7 @@
                         <tbody id="tabla-cuerpo-financiero">
                             <tr>
                                 <td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">
-                                    Sincronizando información financiera consolidada...
+                                    Extrayendo variables analíticas unificadas...
                                 </td>
                             </tr>
                         </tbody>
@@ -106,22 +106,52 @@
     </div>
 
     <script>
+        // Convertidor universal a números limpios para evitar fallos de formato latam/US
+        const parsearNumeroJS = (valor) => {
+            if (valor === undefined || valor === null) return 0;
+            if (typeof valor === 'number') return valor;
+            
+            let s = String(valor).replace(/[\$\s]/g, '').trim();
+            if (s === "" || s === "-") return 0;
+
+            if (s.includes('.') && s.includes(',')) {
+                if (s.lastIndexOf('.') < s.lastIndexOf(',')) {
+                    s = s.replace(/\./g, '').replace(',', '.');
+                } else {
+                    s = s.replace(/,/g, '');
+                }
+            } else if (s.includes(',') && s.split(',')[1].length === 2) {
+                s = s.replace(',', '.');
+            } else if (s.includes(',')) {
+                s = s.replace(/,/g, '');
+            }
+            
+            let num = parseFloat(s);
+            return isNaN(num) ? 0 : num;
+        };
+
         const formatearMoneda = (valor) => {
-            if (valor === undefined || valor === null || isNaN(valor)) return '$ 0,00';
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 2 }).format(valor);
         };
 
         const formatearPorcentaje = (valor) => {
-            if (valor === undefined || valor === null || isNaN(valor)) return '0.00%';
-            const num = Number(valor);
+            const num = parsearNumeroJS(valor);
             const signo = num > 0 ? '+' : '';
             const color = num > 0 ? '#16a34a' : num < 0 ? '#dc2626' : '#0f172a';
             return `<span style="color: ${color}; font-weight: 700;">${signo}${num.toFixed(2)}%</span>`;
         };
 
-        fetch('./financial_data.json')
+        const formatearVariacionMoneda = (valor) => {
+            const num = parsearNumeroJS(valor);
+            const signo = num > 0 ? '+' : '';
+            const color = num > 0 ? '#16a34a' : num < 0 ? '#dc2626' : '#0f172a';
+            return `<span style="color: ${color}; font-weight: 700;">${signo}${formatearMoneda(num)}</span>`;
+        };
+
+        // El timestamp (?nocache=) destruye el almacenamiento en caché de GitHub Pages y obliga a leer en vivo
+        fetch('./financial_data.json?nocache=' + new Date().getTime())
             .then(response => {
-                if (!response.ok) throw new Error("No se pudo leer el archivo financial_data.json");
+                if (!response.ok) throw new Error("No se pudo leer el archivo JSON.");
                 return response.json();
             })
             .then(data => {
@@ -139,15 +169,15 @@
                     const nombreVisible = nombresEstructura[key] || key;
                     const targetId = `desglose-${key}`;
 
-                    // MAPEO EXPLÍCITO DE COMPAÑÍA (Bypasa errores de minúsculas/mayúsculas del JSON)
-                    const saldoActual = empresa.saldo_actual ?? 0;
+                    // Mapeo riguroso de las propiedades consolidadas de la compañía
+                    const saldoActual = parsearNumeroJS(empresa.saldo_actual);
                     const varDia = empresa.d_1_variacion ?? 0;
                     const varSemana = empresa.d_7_variacion ?? 0;
-                    const promedio30 = empresa.promedio_30d ?? 0;
-                    const minimo30 = empresa.min_30d ?? 0;
-                    const maximo30 = empresa.max_30d ?? 0;
+                    const promedio30 = parsearNumeroJS(empresa.promedio_30d);
+                    const minimo30 = parsearNumeroJS(empresa.min_30d);
+                    const maximo30 = parsearNumeroJS(empresa.max_30d);
 
-                    // 1. Inyectar Fila Principal Consolidada con sus datos reales devueltos
+                    // 1. Fila Principal Consolidada
                     const filaPrincipal = document.createElement('tr');
                     filaPrincipal.className = 'fila-principal';
                     filaPrincipal.innerHTML = `
@@ -164,7 +194,7 @@
                     `;
                     tbody.appendChild(filaPrincipal);
 
-                    // 2. Inyectar Fila Secundaria de Desglose Oculta
+                    // 2. Fila Secundaria de Desglose Oculta (Sub-tabla de bancos)
                     const filaDesglose = document.createElement('tr');
                     filaDesglose.id = targetId;
                     filaDesglose.className = 'fila-desglose';
@@ -185,38 +215,36 @@
                                 <tbody>
                     `;
 
-                    if (empresa.bancos && Array.isArray(empresa.bancos) && empresa.bancos.length > 0) {
-                        empresa.bancos.forEach(banco => {
-                            
-                            // MAPEO EXPLÍCITO PARA LAS CUENTAS INDIVIDUALES
-                            const nombreBanco = banco.Banco ?? banco["Banco"] ?? "Cuenta / Banco";
-                            const saldoBanco = banco["Saldo Actual"] ?? banco.saldo_actual ?? 0;
-                            const varBanco = banco.Var_D1 ?? banco["Var. D+1 ($)"] ?? 0;
-                            const minBanco = banco.Min_Periodo ?? banco["Min (Periodo)"] ?? 0;
-                            const maxBanco = banco.Max_Periodo ?? banco["Max (Periodo)"] ?? 0;
+                    const listaBancos = empresa.bancos || empresa["bancos"] || [];
 
-                            const colorVar = varBanco > 0 ? '#16a34a' : varBanco < 0 ? '#dc2626' : '#0f172a';
-                            const signo = varBanco > 0 ? '+' : '';
+                    if (listaBancos && Array.isArray(listaBancos) && listaBancos.length > 0) {
+                        listaBancos.forEach(banco => {
+                            // Mapeo cruzado que acepta llaves técnicas y llaves con espacios del Colab
+                            const nombreBanco = banco.Banco ?? banco["Banco"] ?? "Cuenta / Banco";
+                            const saldoBanco = parsearNumeroJS(banco["Saldo Actual"] ?? banco.saldo_actual ?? banco.Saldo_Actual);
+                            const varBanco = parsearNumeroJS(banco.Var_D1 ?? banco["Var. D+1 ($)"] ?? banco.Var_D1_val);
+                            const minBanco = parsearNumeroJS(banco.Min_Periodo ?? banco["Min (Periodo)"] ?? banco.Min_Periodo_val);
+                            const maxBanco = parsearNumeroJS(banco.Max_Periodo ?? banco["Max (Periodo)"] ?? banco.Max_Periodo_val);
 
                             tablaBancosHTML += `
                                 <tr>
                                     <td style="padding-left: 40px !important; font-weight: 600; color: #475569;">${nombreBanco}</td>
                                     <td class="monto" style="font-weight:600;">${formatearMoneda(saldoBanco)}</td>
-                                    <td style="color: ${colorVar}; font-weight: 600;">${varBanco !== 0 ? signo : ''}${formatearMoneda(varBanco)}</td>
+                                    <td>${formatearVariacionMoneda(varBanco)}</td>
                                     <td style="color: #475569;">${formatearMoneda(minBanco)}</td>
                                     <td style="color: #475569;">${formatearMoneda(maxBanco)}</td>
                                 </tr>
                             `;
                         });
                     } else {
-                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 14px;">No se encontraron subcuentas detalladas en este corte.</td></tr>`;
+                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 14px;">No se encontraron subcuentas en este bloque.</td></tr>`;
                     }
 
                     tablaBancosHTML += `</tbody></table></td>`;
                     filaDesglose.innerHTML = tablaBancosHTML;
                     tbody.appendChild(filaDesglose);
 
-                    // 3. Evento de apertura/cierre al hacer clic
+                    // 3. Evento de apertura/cierre
                     filaPrincipal.addEventListener('click', () => {
                         const panel = document.getElementById(targetId);
                         const icon = document.getElementById(`icon-${key}`);
@@ -235,10 +263,8 @@
                 document.getElementById('fecha-actualizacion').style.color = "#16a34a";
             })
             .catch(error => {
-                console.error("Error cargando el pipeline:", error);
+                console.error("Error en Pipeline:", error);
                 document.getElementById('fecha-actualizacion').innerText = "Error JSON";
-                document.getElementById('fecha-actualizacion').style.backgroundColor = "#fee2e2";
-                document.getElementById('fecha-actualizacion').style.color = "#dc2626";
             });
     </script>
 </body>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinOps Dashboard - Bold</title>
-    <link rel="stylesheet" href="estilos.css?v=11">
+    <link rel="stylesheet" href="estilos.css?v=12">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         .fila-principal {
@@ -76,7 +76,7 @@
             <div class="tarjeta-dashboard">
                 <div class="cabecera-tarjeta">
                     <h2><i class='bx bx-analytics'></i> Posición Financiera y Control de Saldos Bancarios</h2>
-                    <span class="badge-actualizado" id="fecha-actualizacion">Sincronizando...</span>
+                    <span class="badge-actualizado" id="fecha-actualizacion">Actualizando...</span>
                 </div>
                 <div class="tabla-contenedor">
                     <table class="tabla-saldos">
@@ -94,7 +94,7 @@
                         <tbody id="tabla-cuerpo-financiero">
                             <tr>
                                 <td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">
-                                    Extrayendo variables analíticas unificadas...
+                                    Sincronizando información analítica en tiempo real...
                                 </td>
                             </tr>
                         </tbody>
@@ -106,12 +106,12 @@
     </div>
 
     <script>
-        // Convertidor universal a números limpios para evitar fallos de formato latam/US
+        // Limpiador y convertidor de números universal para blindar formatos LatAm/US
         const parsearNumeroJS = (valor) => {
             if (valor === undefined || valor === null) return 0;
-            if (typeof valor === 'number') return valor;
+            if (typeof valor === 'number') return isNaN(valor) || !isFinite(valor) ? 0 : valor;
             
-            let s = String(valor).replace(/[\$\s]/g, '').trim();
+            let s = String(valor).replace(/[\$\s\u00A0]/g, '').trim();
             if (s === "" || s === "-") return 0;
 
             if (s.includes('.') && s.includes(',')) {
@@ -120,14 +120,51 @@
                 } else {
                     s = s.replace(/,/g, '');
                 }
-            } else if (s.includes(',') && s.split(',')[1].length === 2) {
-                s = s.replace(',', '.');
             } else if (s.includes(',')) {
-                s = s.replace(/,/g, '');
+                if (s.split(',')[1].length === 2) {
+                    s = s.replace(',', '.');
+                } else {
+                    s = s.replace(/,/g, '');
+                }
             }
-            
             let num = parseFloat(s);
             return isNaN(num) ? 0 : num;
+        };
+
+        // MOTOR DE BÚSQUEDA ELÁSTICA PARA ASIGNAR VARIABLES SIN FALLAS POR CARACTERES ESPECIALES
+        const extraerDatoInteligente = (objeto, palabrasClave, tipoEsperado = 'number') => {
+            if (!objeto || typeof objeto !== 'object') return tipoEsperado === 'number' ? 0 : '';
+            
+            // 1. Intento de coincidencia exacta directa
+            for (let llave of palabrasClave) {
+                if (objeto[llave] !== undefined && objeto[llave] !== null) {
+                    return tipoEsperado === 'number' ? parsearNumeroJS(objeto[llave]) : String(objeto[llave]);
+                }
+            }
+            
+            // 2. Coincidencia elástica: Limpia símbolos, puntos y espacios de las columnas de la hoja
+            let llavesReales = Object.keys(objeto);
+            for (let llaveReal of llavesReales) {
+                let llaveLimpia = llaveReal.toLowerCase().replace(/[^a-z0-9]/g, '');
+                for (let clave of palabrasClave) {
+                    let claveLimpia = clave.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (llaveLimpia.includes(claveLimpia) || claveLimpia.includes(llaveLimpia)) {
+                        return tipoEsperado === 'number' ? parsearNumeroJS(objeto[llaveReal]) : String(objeto[llaveReal]);
+                    }
+                }
+            }
+            
+            // 3. Respaldo extremo: Si busca el nombre de un banco, toma la primera cadena de texto que encuentre
+            if (tipoEsperado === 'string') {
+                for (let llaveReal of llavesReales) {
+                    if (typeof objeto[llaveReal] === 'string' && objeto[llaveReal].trim() !== "" && isNaN(parsearNumeroJS(objeto[llaveReal]))) {
+                        return String(objeto[llaveReal]);
+                    }
+                }
+                return 'Cuenta / Banco';
+            }
+            
+            return 0;
         };
 
         const formatearMoneda = (valor) => {
@@ -148,10 +185,10 @@
             return `<span style="color: ${color}; font-weight: 700;">${signo}${formatearMoneda(num)}</span>`;
         };
 
-        // El timestamp (?nocache=) destruye el almacenamiento en caché de GitHub Pages y obliga a leer en vivo
+        // Forzamos la descarga del JSON ignorando la caché del navegador
         fetch('./financial_data.json?nocache=' + new Date().getTime())
             .then(response => {
-                if (!response.ok) throw new Error("No se pudo leer el archivo JSON.");
+                if (!response.ok) throw new Error("Archivo JSON no encontrado");
                 return response.json();
             })
             .then(data => {
@@ -169,15 +206,15 @@
                     const nombreVisible = nombresEstructura[key] || key;
                     const targetId = `desglose-${key}`;
 
-                    // Mapeo riguroso de las propiedades consolidadas de la compañía
-                    const saldoActual = parsearNumeroJS(empresa.saldo_actual);
-                    const varDia = empresa.d_1_variacion ?? 0;
-                    const varSemana = empresa.d_7_variacion ?? 0;
-                    const promedio30 = parsearNumeroJS(empresa.promedio_30d);
-                    const minimo30 = parsearNumeroJS(empresa.min_30d);
-                    const maximo30 = parsearNumeroJS(empresa.max_30d);
+                    // Extracción elástica para las métricas consolidadas de la compañía
+                    const saldoActual = extraerDatoInteligente(empresa, ['saldo_actual', 'actual', 'saldo']);
+                    const varDia = extraerDatoInteligente(empresa, ['d_1_variacion', 'd_1', 'd1', 'dia']);
+                    const varSemana = extraerDatoInteligente(empresa, ['d_7_variacion', 'd_7', 'd7', 'semana']);
+                    const promedio30 = extraerDatoInteligente(empresa, ['promedio_30d', 'promedio', 'mean', 'prom']);
+                    const minimo30 = extraerDatoInteligente(empresa, ['min_30d', 'min', 'minimo']);
+                    const maximo30 = extraerDatoInteligente(empresa, ['max_30d', 'max', 'maximo']);
 
-                    // 1. Fila Principal Consolidada
+                    // 1. Inyectar Fila Principal
                     const filaPrincipal = document.createElement('tr');
                     filaPrincipal.className = 'fila-principal';
                     filaPrincipal.innerHTML = `
@@ -194,7 +231,7 @@
                     `;
                     tbody.appendChild(filaPrincipal);
 
-                    // 2. Fila Secundaria de Desglose Oculta (Sub-tabla de bancos)
+                    // 2. Inyectar Fila Secundaria de Desglose Oculta
                     const filaDesglose = document.createElement('tr');
                     filaDesglose.id = targetId;
                     filaDesglose.className = 'fila-desglose';
@@ -219,12 +256,12 @@
 
                     if (listaBancos && Array.isArray(listaBancos) && listaBancos.length > 0) {
                         listaBancos.forEach(banco => {
-                            // Mapeo cruzado que acepta llaves técnicas y llaves con espacios del Colab
-                            const nombreBanco = banco.Banco ?? banco["Banco"] ?? "Cuenta / Banco";
-                            const saldoBanco = parsearNumeroJS(banco["Saldo Actual"] ?? banco.saldo_actual ?? banco.Saldo_Actual);
-                            const varBanco = parsearNumeroJS(banco.Var_D1 ?? banco["Var. D+1 ($)"] ?? banco.Var_D1_val);
-                            const minBanco = parsearNumeroJS(banco.Min_Periodo ?? banco["Min (Periodo)"] ?? banco.Min_Periodo_val);
-                            const maxBanco = parsearNumeroJS(banco.Max_Periodo ?? banco["Max (Periodo)"] ?? banco.Max_Periodo_val);
+                            // Extracción elástica para los datos bancarios individuales de las subfilas
+                            const nombreBanco = extraerDatoInteligente(banco, ['Banco', 'banco', 'Cuenta', 'cuenta'], 'string');
+                            const saldoBanco = extraerDatoInteligente(banco, ['Saldo Actual', 'saldo_actual', 'actual', 'saldo']);
+                            const varBanco = extraerDatoInteligente(banco, ['Var_D1', 'Var. D+1 ($)', 'Var', 'd1', 'd_1']);
+                            const minBanco = extraerDatoInteligente(banco, ['Min_Periodo', 'Min (Periodo)', 'min', 'minimo']);
+                            const maxBanco = extraerDatoInteligente(banco, ['Max_Periodo', 'Max (Periodo)', 'max', 'maximo']);
 
                             tablaBancosHTML += `
                                 <tr>
@@ -237,14 +274,14 @@
                             `;
                         });
                     } else {
-                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 14px;">No se encontraron subcuentas en este bloque.</td></tr>`;
+                        tablaBancosHTML += `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 14px;">No se encontraron subcuentas en este corte.</td></tr>`;
                     }
 
                     tablaBancosHTML += `</tbody></table></td>`;
                     filaDesglose.innerHTML = tablaBancosHTML;
                     tbody.appendChild(filaDesglose);
 
-                    // 3. Evento de apertura/cierre
+                    // 3. Evento de clic
                     filaPrincipal.addEventListener('click', () => {
                         const panel = document.getElementById(targetId);
                         const icon = document.getElementById(`icon-${key}`);
@@ -264,7 +301,7 @@
             })
             .catch(error => {
                 console.error("Error en Pipeline:", error);
-                document.getElementById('fecha-actualizacion').innerText = "Error JSON";
+                document.getElementById('fecha-actualizacion').innerText = "Error Sincro";
             });
     </script>
 </body>

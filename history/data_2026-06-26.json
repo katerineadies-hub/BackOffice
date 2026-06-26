@@ -1,6 +1,6 @@
 {
     "Bold_CF": {
-        "saldo_actual": 263697709784.25003,
+        "saldo_actual": 263679531784.25003,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
@@ -59,8 +59,8 @@
             },
             {
                 "nombre": "Efecty",
-                "saldo": 90123043.0,
-                "variacion": -21.723375075085308
+                "saldo": 71945043.0,
+                "variacion": -20.1702021978996
             },
             {
                 "nombre": "JP Morgan USD",
@@ -80,7 +80,7 @@
         ]
     },
     "Bold_SAS": {
-        "saldo_actual": 23054748692.690002,
+        "saldo_actual": 21852094165.31,
         "bancos": [
             {
                 "nombre": "Bold CF 4070",
@@ -106,11 +106,6 @@
                 "nombre": "Bancolombia 0126",
                 "saldo": 1491467461.03,
                 "variacion": -71.2917128081177
-            },
-            {
-                "nombre": "Corredores Davivienda",
-                "saldo": 1293109295.07,
-                "variacion": 1289.391543069152
             },
             {
                 "nombre": "Bancolombia 9802",
@@ -141,6 +136,11 @@
                 "nombre": "Bold CF 9183",
                 "saldo": 90807821.82,
                 "variacion": -78.64469099470911
+            },
+            {
+                "nombre": "Corredores Davivienda",
+                "saldo": 90454767.69,
+                "variacion": -93.00486292729776
             },
             {
                 "nombre": "N\u00f3mina SAS 0586",

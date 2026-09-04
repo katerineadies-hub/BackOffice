@@ -1,6 +1,6 @@
 {
     "Bold_CF": {
-        "saldo_actual": 365350604175.1401,
+        "saldo_actual": 361947299827.91,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
@@ -9,8 +9,8 @@
             },
             {
                 "nombre": "Adquirencia TAPI",
-                "saldo": 17605627994.93,
-                "variacion": -2.4209854788524043
+                "saldo": 18059760621.43,
+                "variacion": 3.8345270746887117
             },
             {
                 "nombre": "CredicorpCapital Bold CF",
@@ -19,8 +19,8 @@
             },
             {
                 "nombre": "Adquirencia VISA D",
-                "saldo": 12572335606.96,
-                "variacion": -71.33275385105499
+                "saldo": 10292030373.98,
+                "variacion": -16.974419228336746
             },
             {
                 "nombre": "Bogot\u00e1",
@@ -29,18 +29,18 @@
             },
             {
                 "nombre": "Bancolombia",
-                "saldo": 4001416418.58,
-                "variacion": -1.5462575831701555
+                "saldo": 2634242013.34,
+                "variacion": -34.16726134505078
             },
             {
                 "nombre": "Adquirencia MCCA",
-                "saldo": 1330212026.59,
-                "variacion": -4.152720436091534
+                "saldo": 1241140143.0,
+                "variacion": -4.615970542436072
             },
             {
                 "nombre": "Emisi\u00f3n MCCA",
-                "saldo": 1281922064.19,
-                "variacion": -9.868436035764153
+                "saldo": 1203464087.24,
+                "variacion": 5.055202447502404
             },
             {
                 "nombre": "Entrecuentas RBM",
@@ -49,18 +49,18 @@
             },
             {
                 "nombre": "Bold CF 9539",
-                "saldo": 708406366.33,
-                "variacion": -0.03234193784016835
-            },
-            {
-                "nombre": "Citibank 3021",
-                "saldo": 237640666.63,
-                "variacion": -29.06911274879364
+                "saldo": 708050353.46,
+                "variacion": -0.012586832366858874
             },
             {
                 "nombre": "Efecty",
                 "saldo": 201857049.0,
                 "variacion": -17.933296422969242
+            },
+            {
+                "nombre": "Citibank 3021",
+                "saldo": 195569204.53,
+                "variacion": -67.69193045017859
             },
             {
                 "nombre": "Bold CF 2157",
@@ -80,72 +80,72 @@
         ]
     },
     "Bold_SAS": {
-        "saldo_actual": 48267157077.28001,
+        "saldo_actual": 38999840154.14001,
         "bancos": [
             {
                 "nombre": "CredicorpCapital Agregadora",
-                "saldo": 13899674987.72,
-                "variacion": 10.336512461906135
-            },
-            {
-                "nombre": "Bold CF 4070",
-                "saldo": 12487147998.64,
-                "variacion": 154.59062510478708
+                "saldo": 14409151431.58,
+                "variacion": 14.380769183496392
             },
             {
                 "nombre": "Bancolombia 0126",
-                "saldo": 8789296671.65,
-                "variacion": -21.938745365426158
+                "saldo": 7489753500.29,
+                "variacion": -14.785519477931544
             },
             {
                 "nombre": "Davivienda",
-                "saldo": 4990563441.46,
-                "variacion": 383.2285898278873
+                "saldo": 5355567651.11,
+                "variacion": 7.703492885807677
+            },
+            {
+                "nombre": "Bold CF 4070",
+                "saldo": 5119704374.81,
+                "variacion": 14.299460758058064
             },
             {
                 "nombre": "Bold CF 4755",
-                "saldo": 4878127595.83,
-                "variacion": -59.27202019776069
+                "saldo": 4119040596.0,
+                "variacion": 69.88512920499016
             },
             {
                 "nombre": "Bold CF3016",
-                "saldo": 981523230.36,
-                "variacion": -22.23349042849184
+                "saldo": 981413347.86,
+                "variacion": -0.006522666970653136
             },
             {
                 "nombre": "Bancolombia 5928",
-                "saldo": 812296542.02,
-                "variacion": 67.4902501916443
-            },
-            {
-                "nombre": "Bancolombia 9802",
-                "saldo": 534958263.7,
-                "variacion": -45.68570197291601
+                "saldo": 481061837.05,
+                "variacion": -40.777559405373474
             },
             {
                 "nombre": "DaviBank",
-                "saldo": 295997691.81,
-                "variacion": -77.88449608359494
+                "saldo": 281161331.24,
+                "variacion": -5.012322802207262
             },
             {
                 "nombre": "Bold CF 9183",
-                "saldo": 151781837.71,
-                "variacion": 17.540894335259317
+                "saldo": 204842937.71,
+                "variacion": 10.825177062859304
+            },
+            {
+                "nombre": "Bancolombia 9802",
+                "saldo": 156868389.39,
+                "variacion": -70.67651814460606
             },
             {
                 "nombre": "CredicorpCapital  Operativa",
-                "saldo": 144964200.58,
-                "variacion": 0.017028999543560856
-            },
-            {
-                "nombre": "Citibank",
-                "saldo": 123427022.35,
-                "variacion": 69.82193915956017
+                "saldo": 145061371.11,
+                "variacion": 0.08407112220575404
             },
             {
                 "nombre": "Corredores Davivienda",
-                "saldo": 117665928.11,
-                "variacion": -90.42482811476495
+                "saldo": 117752301.98,
+                "variacion": 0.07340601598727726
+            },
+            {
+                "nombre": "Citibank",
+                "saldo": 78729418.67,
+                "variacion": -21.298731309966826
             },
             {
                 "nombre": "Bold CF 9822",
@@ -165,17 +165,17 @@
         ]
     },
     "Bold_Peru": {
-        "saldo_actual": 1420514.12,
+        "saldo_actual": 1184905.05,
         "bancos": [
             {
-                "nombre": "BCP MN 194-2451630-0-38 Soles",
-                "saldo": 925537.02,
-                "variacion": 121.08655191105255
+                "nombre": "BCP MN 191-8740048-0-11 Soles",
+                "saldo": 608871.49,
+                "variacion": 163.23840771568055
             },
             {
-                "nombre": "BCP MN 191-8740048-0-11 Soles",
-                "saldo": 231300.4,
-                "variacion": -89.47418296865499
+                "nombre": "BCP MN 194-2451630-0-38 Soles",
+                "saldo": 321892.84,
+                "variacion": -65.22096544555289
             },
             {
                 "nombre": "BN VM 00-003-234045 Soles",
@@ -190,42 +190,42 @@
             {
                 "nombre": "BCP MN 191-9409795-0-32 Soles",
                 "saldo": 14612.18,
-                "variacion": -0.37838294808722306
+                "variacion": 0.0
             },
             {
                 "nombre": "BCP ME: 194-2454542-1-62 USD",
-                "saldo": 13831.86,
-                "variacion": -94.11111734121921
+                "saldo": 3895.04,
+                "variacion": -71.84008513677841
             },
             {
                 "nombre": "BCP MN 191-9410871-0-01 Soles",
                 "saldo": 2165.89,
-                "variacion": -2.4984356641562266
+                "variacion": 0.0
             },
             {
                 "nombre": "BCP MN 194-2473891-0-96 Soles",
-                "saldo": 970.23,
-                "variacion": -5.410780614781667
+                "saldo": 1004.52,
+                "variacion": 3.5342135369963787
+            },
+            {
+                "nombre": "BCP MN 191-8591606-0-96 Soles",
+                "saldo": 1000.58,
+                "variacion": 57.812721795498646
             },
             {
                 "nombre": "BCP MN 1919914041027 Soles",
                 "saldo": 822.16,
-                "variacion": -6.32363329763234
-            },
-            {
-                "nombre": "BCP MN 191-8591606-0-96 Soles",
-                "saldo": 634.03,
-                "variacion": -8.048960886400883
+                "variacion": 0.0
             },
             {
                 "nombre": "BCP MN 191-8591607-0-06 Soles",
                 "saldo": 273.63,
-                "variacion": -16.862637863458207
+                "variacion": 0.0
             },
             {
                 "nombre": "BCP MN 191-8591608-0-16 Soles",
                 "saldo": 57.54,
-                "variacion": -49.097664543524424
+                "variacion": 0.0
             }
         ]
     },

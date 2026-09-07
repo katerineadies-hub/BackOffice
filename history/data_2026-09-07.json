@@ -1,11 +1,11 @@
 {
     "Bold_CF": {
-        "saldo_actual": 451407851327.61,
+        "saldo_actual": 296171413017.5,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
-                "saldo": 307128491887.21,
-                "variacion": 89.414090623475
+                "saldo": 151311928448.52,
+                "variacion": 44.55454483909329
             },
             {
                 "nombre": "Adquirencia TAPI",
@@ -20,12 +20,12 @@
             {
                 "nombre": "CredicorpCapital Bold CF",
                 "saldo": 10975682714.68,
-                "variacion": -13.280302806456106
+                "variacion": 0.09223350285733224
             },
             {
                 "nombre": "Bogot\u00e1",
-                "saldo": 6677818815.63,
-                "variacion": 1.970581555565493
+                "saldo": 7258246515.63,
+                "variacion": 2.323580459643124
             },
             {
                 "nombre": "Adquirencia MCCA",
@@ -70,12 +70,7 @@
             {
                 "nombre": "JP Morgan USD",
                 "saldo": 1450689.79,
-                "variacion": 1285.1710603293175
-            },
-            {
-                "nombre": "Adquirencia VISA I",
-                "saldo": 302571.42,
-                "variacion": -56.65112554895197
+                "variacion": 11.914552471947346
             }
         ]
     },

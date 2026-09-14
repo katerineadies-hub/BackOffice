@@ -1,11 +1,11 @@
 {
     "Bold_CF": {
-        "saldo_actual": 151374501004.07,
+        "saldo_actual": 216914227812.46002,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
-                "saldo": 96190655092.84,
-                "variacion": 2.3800982817834897
+                "saldo": 161730381901.23,
+                "variacion": 68.13523283018841
             },
             {
                 "nombre": "CredicorpCapital Bold CF",

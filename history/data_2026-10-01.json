@@ -1,6 +1,6 @@
 {
     "Bold_CF": {
-        "saldo_actual": 133087751071.53,
+        "saldo_actual": 133087769805.53,
         "bancos": [
             {
                 "nombre": "Banco Rep\u00fablica (CUD)",
@@ -69,8 +69,8 @@
             },
             {
                 "nombre": "Adquirencia VISA I",
-                "saldo": 310322.14,
-                "variacion": 7.102294445135289
+                "saldo": 329056.14,
+                "variacion": 6.036952439165313
             },
             {
                 "nombre": "Bold CF 2157",
